@@ -29,8 +29,10 @@
 #'
 #' @return data frame 
 #' @export
-#' @importFrom SSBtools WildcardGlobbingVector
+#' @importFrom GaussSuppression GaussSuppressionFromData NcontributorsHolding Ncontributors
+#' @importFrom SSBtools WildcardGlobbingVector SortRows
 #' @importFrom methods hasArg
+#' @importFrom stats aggregate
 #' @examples
 #' 
 #' prikkeVarA <- c("arb_fylke", "ARB_ARBKOMM", "nar8", "sektor")

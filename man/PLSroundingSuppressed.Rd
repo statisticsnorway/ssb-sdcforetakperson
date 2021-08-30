@@ -48,13 +48,13 @@ are not in output from that function, but they are in output from the current fu
 \examples{
 
 z1 <- SmallCountRounding::SmallCountData("z1")
-sup <- GaussSuppressionFromData(z1, 1:2, 3)
+sup <- GaussSuppression::GaussSuppressionFromData(z1, 1:2, 3)
 sup <- sup[sup$suppressed, !(names(sup) \%in\% c("freq", "primary", "suppressed"))]
 a <- PLSroundingSuppressed(z1, "ant", sup, roundBase = 20)
 aNoSuppression <- PLSroundingSuppressed(z1, "ant", roundBase = 20)
 
 z3 <- SmallCountRounding::SmallCountData("z3")
-sup <- GaussSuppressionFromData(z3, c(1, 2, 4), 7)
+sup <- GaussSuppression::GaussSuppressionFromData(z3, c(1, 2, 4), 7)
 sup <- sup[sup$suppressed, !(names(sup) \%in\% c("freq", "primary", "suppressed"))]
 b <- PLSroundingSuppressed(z3[, -c(3, 6)], "ant", sup, roundBase = 3)
 

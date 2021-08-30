@@ -31,7 +31,7 @@ test_that("KOde for ArbForhold og Lonnstaker", {
   GF = function(...) SF(..., Fun = Suppression578)
   # Funksjon som på mail, men med flere input-parametere 
   Suppression578 <- function(data, dimVar, freqVar,  weightVar = "narWeight", protectZeros = FALSE, maxN = 2) {
-    prikk <- GaussSuppressionFromData(data = data, dimVar = dimVar, freqVar = freqVar, 
+    prikk <- GaussSuppression::GaussSuppressionFromData(data = data, dimVar = dimVar, freqVar = freqVar, 
                                       charVar = c("sektor", "FRTK_VIRK_UNIK"), weightVar = weightVar, protectZeros = protectZeros, 
                                       maxN = maxN, primary = SdcForetakPerson:::Primary_FRTK_VIRK_UNIK_sektor, preAggregate = TRUE)
     
@@ -59,7 +59,7 @@ test_that("KOde for ArbForhold og Lonnstaker", {
 
 
 test_that("Med ren GaussSuppressionFromData", {
-  GD = function(...) SF(..., Fun = GaussSuppressionFromData)
+  GD = function(...) SF(..., Fun = GaussSuppression::GaussSuppressionFromData)
   
   expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = FALSE, maxN = 2), 13042550120)
   expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = TRUE, maxN = 2), 12106514632)
