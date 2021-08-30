@@ -10,7 +10,7 @@ SF <- function(... , Fun = SdcForetakPerson) {  # check sum
 prikkeVarA <- c("arb_fylke", "ARB_ARBKOMM", "nar8", "sektor")
 prikkeVarB <- c("arb_fylke", "ARB_ARBKOMM", "nar17")
 
-z100 <- OylData("syssel100")
+z100 <- SdcData("syssel100")
 
 
 test_that("SdcForetakPerson works", {

@@ -23,17 +23,17 @@ pkgEnvSdcForetakPersonData <- new.env(parent=emptyenv())
 #' @author Øyvind Langsrud
 #'
 #' @examples
-#' OylData("syssel7")
-#' z <- OylData("syssel100")
-OylData <- function(dataset) {
+#' SdcData("syssel7")
+#' z <- SdcData("syssel100")
+SdcData <- function(dataset) {
   if(dataset == "syssel7"){
-    z <- OylData("syssel100")[c(25, 29, 49, 73, 74, 86, 99) ,c(3,4,5,9,10)]
+    z <- SdcData("syssel100")[c(25, 29, 49, 73, 74, 86, 99) ,c(3,4,5,9,10)]
     rownames(z) <- NULL
     return(z)
   }
   
   if(dataset == "syssel27"){
-    z <- OylData("syssel100")[c(4, 5, 12, 14, 16, 21, 25, 27, 33, 38, 44, 45, 54, 55, 56, 66, 
+    z <- SdcData("syssel100")[c(4, 5, 12, 14, 16, 21, 25, 27, 33, 38, 44, 45, 54, 55, 56, 66, 
                                 68, 72, 82, 83, 84, 85, 89, 94, 95, 96, 97), ]
     rownames(z) <- NULL
     return(z)

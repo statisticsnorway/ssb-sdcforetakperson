@@ -83,14 +83,14 @@ Prikking av foretak og avrunding eller prikking av personer
 prikkeVarA <- c("arb_fylke", "ARB_ARBKOMM", "nar8", "sektor")
 prikkeVarB <- c("arb_fylke", "ARB_ARBKOMM", "nar17")
 
-z <- OylData("syssel27")
+z <- SdcData("syssel27")
 
 SdcForetakPerson(z, between = prikkeVarA)
 SdcForetakPerson(z, between = prikkeVarA, output = "suppressed")
 
 SdcForetakPerson(z, between = prikkeVarB, within = "PERS_KJOENN")
 
-z100 <- OylData("syssel100")
+z100 <- SdcData("syssel100")
 out <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"))
 head(out)
 tail(out)

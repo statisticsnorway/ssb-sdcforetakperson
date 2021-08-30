@@ -14,7 +14,7 @@
 #' @export
 #' @importFrom SSBtools Number
 #' @examples 
-#' z <- OylData("syssel7")
+#' z <- SdcData("syssel7")
 #' Make_FRTK_VIRK_UNIK_AggVar(z)
 #' Make_FRTK_VIRK_UNIK_AggVar(z, 
 #'     varnames = c("FRTK_VIRK_UNIK", "sysselsatte", NA, NA, NA, NA, "ant_FRTK_VIRK_UNIK"))
