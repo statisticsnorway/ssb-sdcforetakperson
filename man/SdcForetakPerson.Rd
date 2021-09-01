@@ -72,6 +72,13 @@ Parameteren har betydning for telling av antall foretak bak et tall.}
 
 \item{output}{Ved avrunding kan ulike type output velges. Enten "rounded" (samme som NULL) eller "suppressed" (liste med begge hvis noe annet).
 Her kan det bli endring.}
+
+\item{decimal}{Ved TRUE og når maxN er ikke-NULL kjøres \code{\link{GaussSuppressDec}}. Ekstra kolloner i output er
+\itemize{
+\item \strong{\code{freqDec}:} Heltall og syntetiske desimaltall istedenfor prikker.
+\item \strong{\code{isPublish}:} Om dette er en vanlig output-celle.
+\item \strong{\code{isInner}:} Om dette er en indre celle som kan benyttes til aggregering av andre celler.
+}}
 }
 \value{
 data frame

@@ -26,6 +26,10 @@
 #' @param preAggregate Input til \code{\link{GaussSuppressionFromData}}. Parameteren er med her for testing og sammenlikning av resultater. 
 #' @param output Ved avrunding kan ulike type output velges. Enten "rounded" (samme som NULL) eller "suppressed" (liste med begge hvis noe annet). 
 #'               Her kan det bli endring. 
+#' @param decimal Ved TRUE og når maxN er ikke-NULL kjøres \code{\link{GaussSuppressDec}}. Ekstra kolloner i output er
+#' * **`freqDec`:** Heltall og syntetiske desimaltall istedenfor prikker.
+#' * **`isPublish`:** Om dette er en vanlig output-celle. 
+#' * **`isInner`:** Om dette er en indre celle som kan benyttes til aggregering av andre celler.                   
 #'
 #' @return data frame 
 #' @export
