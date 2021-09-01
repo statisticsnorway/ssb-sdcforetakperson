@@ -98,6 +98,10 @@ SdcForetakPerson(z, between = prikkeVarA, output = "suppressed")
 
 SdcForetakPerson(z, between = prikkeVarB, within = "PERS_KJOENN")
 
+SdcForetakPerson(z, between = prikkeVarA, maxN = 2)
+SdcForetakPerson(z, between = prikkeVarA, maxN = 2, decimal = TRUE)
+SdcForetakPerson(z, between = prikkeVarB, within = "PERS_KJOENN", maxN = 2, decimal = TRUE)
+
 z100 <- SdcData("syssel100")
 out <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"))
 head(out)
