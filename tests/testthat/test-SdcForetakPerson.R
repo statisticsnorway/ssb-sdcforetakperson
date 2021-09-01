@@ -51,7 +51,7 @@ test_that("KOde for ArbForhold og Lonnstaker", {
   expect_identical(GF(z, prikkeVarB , "Lonnstaker", maxN = -1), 343542404)
   expect_identical(GF(z, prikkeVarB , "Lonnstaker", maxN = 5), 343533630)
   expect_identical(GF(z, prikkeVarB , "ArbForhold", maxN = -1, weightVar =NULL), 343701799)
-  expect_identical(GF(z, prikkeVarB , "ArbForhold", maxN = 5, protectZeros =TRUE), 343701795)
+  expect_identical(suppressWarnings(GF(z, prikkeVarB , "ArbForhold", maxN = 5, protectZeros =TRUE)), 343701795)
 
   
 })
@@ -62,8 +62,8 @@ test_that("Med ren GaussSuppressionFromData", {
   GD = function(...) SF(..., Fun = GaussSuppression::GaussSuppressionFromData)
   
   expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = FALSE, maxN = 2), 13042550120)
-  expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = TRUE, maxN = 2), 12106514632)
-  expect_identical(GD(z, prikkeVarA, "Lonnstaker", protectZeros = TRUE, maxN = 5), 11744811938)
+  expect_identical(suppressWarnings(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = TRUE, maxN = 2)), 12106514632)
+  expect_identical(suppressWarnings(GD(z, prikkeVarA, "Lonnstaker", protectZeros = TRUE, maxN = 5)), 11744811938)
   expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = FALSE, maxN = 2, singleton = NULL), 13418947051)
   expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = FALSE, maxN = 2, singletonMethod = "none"), 13418947051)
   
