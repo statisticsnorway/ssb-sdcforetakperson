@@ -68,3 +68,29 @@ test_that("Med ren GaussSuppressionFromData", {
   expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = FALSE, maxN = 2, singletonMethod = "none"), 13418947051)
   
 })
+
+
+test_that("SdcForetakPerson med decimal", {
+
+  GD <- function(...) SdcForetakPerson(...)
+  a1 <- GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE, maxN = 2)
+  a2 <- suppressWarnings(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE, maxN = 2))
+  a3 <- GD(z, prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE, maxN = 5)
+  
+  
+  GD <- function(...) SdcForetakPerson(..., decimal = TRUE)
+  b1 <- GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE, maxN = 2)
+  b2 <- suppressWarnings(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE, maxN = 2))
+  b3 <- GD(z, prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE, maxN = 5)
+  
+  expect_equivalent(b1[b1$isPublish == 1, names(a1)], a1)
+  expect_equivalent(b2[b2$isPublish == 1, names(a2)], a2)
+  expect_equivalent(b3[b3$isPublish == 1, names(a3)], a3)
+})
+
+
+
+
+
+
+

@@ -24,7 +24,8 @@ SdcForetakPerson(
   makeunik = TRUE,
   removeZeros = !protectZeros,
   preAggregate = TRUE,
-  output = NULL
+  output = NULL,
+  decimal = FALSE
 )
 }
 \arguments{

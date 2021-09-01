@@ -29,7 +29,7 @@
 #'
 #' @return data frame 
 #' @export
-#' @importFrom GaussSuppression GaussSuppressionFromData NcontributorsHolding Ncontributors
+#' @importFrom GaussSuppression GaussSuppressionFromData NcontributorsHolding Ncontributors GaussSuppressDec
 #' @importFrom SSBtools WildcardGlobbingVector SortRows
 #' @importFrom methods hasArg
 #' @importFrom stats aggregate
@@ -67,7 +67,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             nace = c("nar*", "NACE*", "nace*"), nace00="00",
                             frtk="FRTK_ID_SSB", virk="VIRK_ID_SSB", unik = "UNIK_ID", 
                             makeunik = TRUE, removeZeros = !protectZeros, preAggregate = TRUE,
-                            output = NULL){
+                            output = NULL,
+                            decimal = FALSE){
   
   if (is.null(output)) 
     output = "rounded"
@@ -188,6 +189,40 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   
   
   if(!is.null(maxN)){
+    if(decimal){
+      if(length(between )>0){
+        prikkData <- GaussSuppressDec(data, dimVar = alleVar, freqVar = freqVar, 
+                                              charVar = c(sector, "FRTK_VIRK_UNIK"), 
+                                              weightVar = "narWeight", protectZeros = protectZeros, maxN = maxN,
+                                              secondaryZeros = secondaryZeros,
+                                              primary = Primary_FRTK_VIRK_UNIK_sektor, # singleton = NULL, singletonMethod = "none", 
+                                              preAggregate = preAggregate,
+                                              sector = sector, private = private, between = between)
+      } else {
+        prikkData <- GaussSuppressDec(data, dimVar = alleVar, freqVar = freqVar, 
+                                              protectZeros = protectZeros, maxN = maxN, 
+                                              secondaryZeros = secondaryZeros,
+                                              preAggregate = preAggregate)
+      }
+      
+      
+      ############################################
+      # Endring foreløpig output til å være lik tidligere ArbForhold/Lonnstaker 
+      ############################################
+      # Endrer fra TRUE/FALSE til 0/1
+      prikkData$primary <- as.integer(prikkData$primary)
+      prikkData$suppressed <- as.integer(prikkData$suppressed)
+      # Tar bort weight og inn med prikket på samme plass
+      names(prikkData)[names(prikkData) == "weight"] <- "prikket"
+      prikkData$prikket <- prikkData$freq
+      prikkData$prikket[prikkData$suppressed==1] <- NA
+      
+      # Endrer mer fra TRUE/FALSE til 0/1 for å være konsekvent 
+      prikkData$isPublish <- as.integer(prikkData$isPublish)
+      prikkData$isInner <- as.integer(prikkData$isInner)
+      
+      return(prikkData)
+    }
     if(length(between )>0){
       prikkData <- GaussSuppressionFromData(data, dimVar = alleVar, freqVar = freqVar, 
                                             charVar = c(sector, "FRTK_VIRK_UNIK"), 
