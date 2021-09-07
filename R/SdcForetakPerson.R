@@ -174,14 +174,23 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     }
     
     if(is.null(maxN)){
-      prikkData <- GaussSuppressionFromData(data, dimVar = between , freqVar = freqVar, 
-                                            charVar = c(sector, "FRTK_VIRK_UNIK"), 
-                                            weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
-                                            secondaryZeros = secondaryZeros,
-                                            primary = Primary_FRTK_VIRK_UNIK_sektor, 
-                                            singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
-                                            sector = sector, private = private)
-      
+      if(decimal & output == "suppressed"){
+        prikkData <-         GaussSuppressDec(data, dimVar = between , freqVar = freqVar, 
+                                              charVar = c(sector, "FRTK_VIRK_UNIK"), 
+                                              weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
+                                              secondaryZeros = secondaryZeros,
+                                              primary = Primary_FRTK_VIRK_UNIK_sektor, 
+                                              singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
+                                              sector = sector, private = private)
+      } else {
+        prikkData <- GaussSuppressionFromData(data, dimVar = between , freqVar = freqVar, 
+                                              charVar = c(sector, "FRTK_VIRK_UNIK"), 
+                                              weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
+                                              secondaryZeros = secondaryZeros,
+                                              primary = Primary_FRTK_VIRK_UNIK_sektor, 
+                                              singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
+                                              sector = sector, private = private)
+      }
       
       if(output == "suppressed"){
         prikkData$prikk <- as.integer(prikkData$suppressed)
