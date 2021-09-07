@@ -111,6 +111,10 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   
   
   if(!is.null(by)){
+    if(!is.null(dataDec)){
+     stop("Desimal-input kombinert med by er ikke implementert")
+    }
+    
     if(!(output %in% c("rounded", "suppressed")))
       stop('Output must be "rounded" or "suppressed" when non-NULL "by"')
     return(KostraApply( data=data, by=by, Fun=SdcForetakPerson, 
@@ -118,7 +122,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                         protectZeros = protectZeros, secondaryZeros = secondaryZeros, freqVar = freqVar,  
                         sector=sector, private = private,
                         nace = nace, nace00=nace00, frtk=frtk, virk=virk, unik =unik, makeunik =makeunik, 
-                        removeZeros = removeZeros, preAggregate = preAggregate, output = output)) 
+                        removeZeros = removeZeros, preAggregate = preAggregate, output = output, decimal = decimal)) 
   }
   
   CheckInput(between, type = "varNrName", data = data, okNULL = TRUE, okSeveral = TRUE)
@@ -192,15 +196,14 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                                 primary = Primary_FRTK_VIRK_UNIK_sektor, 
                                                 singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
                                                 sector = sector, private = private, output = "both")
-          dimVarOut <- dimVar[dimVar %in% names(a$publish)]
+          dimVarOut <- between[between %in% names(a$publish)]
           ma <- Match(a$publish[dimVarOut], a$inner[dimVarOut])
-          prikkData <- cbind(a$inner[ma[!is.na(ma)], dimVar, drop = FALSE], 
-                             a$publish[!is.na(ma), !(names(a$publish) %in% c(dimVar, "weight", "primary")), drop = FALSE])
+          prikkData <- cbind(a$inner[ma[!is.na(ma)], between, drop = FALSE], 
+                             a$publish[!is.na(ma), !(names(a$publish) %in% c(between, "weight", "primary")), drop = FALSE])
           names(prikkData)[names(prikkData) == "suppressed"] <- "prikk"
           prikkData$prikk <- as.integer(prikkData$prikk)
           rownames(prikkData) <- NULL
           return(prikkData)
-
         } else {
           prikkData <- GaussSuppressionFromData(data, dimVar = between , freqVar = freqVar, 
                                                 charVar = c(sector, "FRTK_VIRK_UNIK"), 
