@@ -24,7 +24,9 @@ SdcForetakPerson(
   makeunik = TRUE,
   removeZeros = !protectZeros,
   preAggregate = TRUE,
-  output = NULL
+  output = NULL,
+  decimal = FALSE,
+  freqDec = "freqDec"
 )
 }
 \arguments{
@@ -71,6 +73,19 @@ Parameteren har betydning for telling av antall foretak bak et tall.}
 
 \item{output}{Ved avrunding kan ulike type output velges. Enten "rounded" (samme som NULL) eller "suppressed" (liste med begge hvis noe annet).
 Her kan det bli endring.}
+
+\item{decimal}{\strong{Ved TRUE og når maxN er ikke-NULL} kjøres \code{\link{GaussSuppressDec}}. Ekstra kolloner i output er
+\itemize{
+\item \strong{\code{freqDec}:} Heltall og syntetiske desimaltall istedenfor prikker.
+\item \strong{\code{isPublish}:} Om dette er en vanlig output-celle.
+\item \strong{\code{isInner}:} Om dette er en indre celle som kan benyttes til aggregering av andre celler.
+}
+
+\strong{Ved TRUE og når maxN er NULL} returneres indre celle-data med desimaltall. Dette kan fungere som input seinere (se nedenfor).
+
+\strong{Ved \code{decimal} som en data-frame og når maxN er NULL} antas at dette er indre celle-data med desimaltall. Prikking vil baseres på aggregering av disse.}
+
+\item{freqDec}{Navn på variabel med desimaltall. Brukes når \code{decimal} er en data-frame.}
 }
 \value{
 data frame
@@ -83,17 +98,32 @@ Prikking av foretak og avrunding eller prikking av personer
 prikkeVarA <- c("arb_fylke", "ARB_ARBKOMM", "nar8", "sektor")
 prikkeVarB <- c("arb_fylke", "ARB_ARBKOMM", "nar17")
 
-z <- OylData("syssel27")
+z <- SdcData("syssel27")
 
 SdcForetakPerson(z, between = prikkeVarA)
 SdcForetakPerson(z, between = prikkeVarA, output = "suppressed")
 
 SdcForetakPerson(z, between = prikkeVarB, within = "PERS_KJOENN")
 
-z100 <- OylData("syssel100")
+SdcForetakPerson(z, between = prikkeVarA, maxN = 2)
+SdcForetakPerson(z, between = prikkeVarA, maxN = 2, decimal = TRUE)
+SdcForetakPerson(z, between = prikkeVarB, within = "PERS_KJOENN", maxN = 2, decimal = TRUE)
+
+z100 <- SdcData("syssel100")
 out <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"))
 head(out)
 tail(out)
+
+
+# Finner data desimaltall med mange variabler som tas hensyn til.  
+# Dessverre en warning som kan sees bort fra 
+# Kan unngaas med dataDec <- suppressWarnings(SdcForetakPerson(.....
+prikkeVarC <- c("arb_fylke", "ARB_ARBKOMM", "nar8", "sektor", "nar17")
+dataDec <- SdcForetakPerson(z100, between = prikkeVarC, nace = "nar8", decimal = TRUE)
+
+# Bruker desimaltall som utgangspunkt for prikking
+outA <- SdcForetakPerson(z100, between = prikkeVarA, decimal = dataDec)
+outB <- SdcForetakPerson(z100, between = prikkeVarB, within = "PERS_KJOENN", decimal = dataDec)
 
 # Lager data med to stataar
 z100$stataar <- "2019"

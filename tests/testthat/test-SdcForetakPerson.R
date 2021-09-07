@@ -10,7 +10,7 @@ SF <- function(... , Fun = SdcForetakPerson) {  # check sum
 prikkeVarA <- c("arb_fylke", "ARB_ARBKOMM", "nar8", "sektor")
 prikkeVarB <- c("arb_fylke", "ARB_ARBKOMM", "nar17")
 
-z100 <- OylData("syssel100")
+z100 <- SdcData("syssel100")
 
 
 test_that("SdcForetakPerson works", {
@@ -31,7 +31,7 @@ test_that("KOde for ArbForhold og Lonnstaker", {
   GF = function(...) SF(..., Fun = Suppression578)
   # Funksjon som på mail, men med flere input-parametere 
   Suppression578 <- function(data, dimVar, freqVar,  weightVar = "narWeight", protectZeros = FALSE, maxN = 2) {
-    prikk <- GaussSuppressionFromData(data = data, dimVar = dimVar, freqVar = freqVar, 
+    prikk <- GaussSuppression::GaussSuppressionFromData(data = data, dimVar = dimVar, freqVar = freqVar, 
                                       charVar = c("sektor", "FRTK_VIRK_UNIK"), weightVar = weightVar, protectZeros = protectZeros, 
                                       maxN = maxN, primary = SdcForetakPerson:::Primary_FRTK_VIRK_UNIK_sektor, preAggregate = TRUE)
     
@@ -51,7 +51,7 @@ test_that("KOde for ArbForhold og Lonnstaker", {
   expect_identical(GF(z, prikkeVarB , "Lonnstaker", maxN = -1), 343542404)
   expect_identical(GF(z, prikkeVarB , "Lonnstaker", maxN = 5), 343533630)
   expect_identical(GF(z, prikkeVarB , "ArbForhold", maxN = -1, weightVar =NULL), 343701799)
-  expect_identical(GF(z, prikkeVarB , "ArbForhold", maxN = 5, protectZeros =TRUE), 343701795)
+  expect_identical(suppressWarnings(GF(z, prikkeVarB , "ArbForhold", maxN = 5, protectZeros =TRUE)), 343701795)
 
   
 })
@@ -59,12 +59,38 @@ test_that("KOde for ArbForhold og Lonnstaker", {
 
 
 test_that("Med ren GaussSuppressionFromData", {
-  GD = function(...) SF(..., Fun = GaussSuppressionFromData)
+  GD = function(...) SF(..., Fun = GaussSuppression::GaussSuppressionFromData)
   
   expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = FALSE, maxN = 2), 13042550120)
-  expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = TRUE, maxN = 2), 12106514632)
-  expect_identical(GD(z, prikkeVarA, "Lonnstaker", protectZeros = TRUE, maxN = 5), 11744811938)
+  expect_identical(suppressWarnings(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = TRUE, maxN = 2)), 12106514632)
+  expect_identical(suppressWarnings(GD(z, prikkeVarA, "Lonnstaker", protectZeros = TRUE, maxN = 5)), 11744811938)
   expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = FALSE, maxN = 2, singleton = NULL), 13418947051)
   expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = FALSE, maxN = 2, singletonMethod = "none"), 13418947051)
   
 })
+
+
+test_that("SdcForetakPerson med decimal", {
+
+  GD <- function(...) SdcForetakPerson(...)
+  a1 <- GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE, maxN = 2)
+  a2 <- suppressWarnings(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE, maxN = 2))
+  a3 <- GD(z, prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE, maxN = 5)
+  
+  
+  GD <- function(...) SdcForetakPerson(..., decimal = TRUE)
+  b1 <- GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE, maxN = 2)
+  b2 <- suppressWarnings(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE, maxN = 2))
+  b3 <- GD(z, prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE, maxN = 5)
+  
+  expect_equivalent(b1[b1$isPublish == 1, names(a1)], a1)
+  expect_equivalent(b2[b2$isPublish == 1, names(a2)], a2)
+  expect_equivalent(b3[b3$isPublish == 1, names(a3)], a3)
+})
+
+
+
+
+
+
+
