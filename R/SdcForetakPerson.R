@@ -26,11 +26,17 @@
 #' @param preAggregate Input til \code{\link{GaussSuppressionFromData}}. Parameteren er med her for testing og sammenlikning av resultater. 
 #' @param output Ved avrunding kan ulike type output velges. Enten "rounded" (samme som NULL) eller "suppressed" (liste med begge hvis noe annet). 
 #'               Her kan det bli endring. 
-#' @param decimal Ved TRUE og når maxN er ikke-NULL kjøres \code{\link{GaussSuppressDec}}. Ekstra kolloner i output er
+#' @param decimal **Ved TRUE og når maxN er ikke-NULL** kjøres \code{\link{GaussSuppressDec}}. Ekstra kolloner i output er
 #' * **`freqDec`:** Heltall og syntetiske desimaltall istedenfor prikker.
 #' * **`isPublish`:** Om dette er en vanlig output-celle. 
-#' * **`isInner`:** Om dette er en indre celle som kan benyttes til aggregering av andre celler.                   
-#'
+#' * **`isInner`:** Om dette er en indre celle som kan benyttes til aggregering av andre celler.
+#' 
+#' **Ved TRUE og når maxN er NULL** returneres indre celle-data med desimaltall. Dette kan fungere som input seinere (se nedenfor).    
+#' 
+#' **Ved `decimal` som en data-frame og når maxN er NULL** antas at dette er indre celle-data med desimaltall. Prikking vil baseres på aggregering av disse.                                  
+#' 
+#' @param freqDec Navn på variabel med desimaltall. Brukes når `decimal` er en data-frame. 
+#' 
 #' @return data frame 
 #' @export
 #' @importFrom GaussSuppression GaussSuppressionFromData NcontributorsHolding Ncontributors GaussSuppressDec SuppressionFromDecimals
@@ -57,6 +63,17 @@
 #' out <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"))
 #' head(out)
 #' tail(out)
+#' 
+#' 
+#' # Finner data desimaltall med mange variabler som tas hensyn til.  
+#' # Dessverre en warning som kan sees bort fra 
+#' # Kan unngaas med dataDec <- suppressWarnings(SdcForetakPerson(.....
+#' prikkeVarC <- c("arb_fylke", "ARB_ARBKOMM", "nar8", "sektor", "nar17")
+#' dataDec <- SdcForetakPerson(z100, between = prikkeVarC, nace = "nar8", decimal = TRUE)
+#' 
+#' # Bruker desimaltall som utgangspunkt for prikking
+#' outA <- SdcForetakPerson(z100, between = prikkeVarA, decimal = dataDec)
+#' outB <- SdcForetakPerson(z100, between = prikkeVarB, within = "PERS_KJOENN", decimal = dataDec)
 #' 
 #' # Lager data med to stataar
 #' z100$stataar <- "2019"
@@ -238,7 +255,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
           stop("Finner ikke matchende rader i decimal")
         }
         prikkData <- SuppressionFromDecimals(dataDec, dimVar = between , freqVar = "freq", 
-                                              decVar = "freqDec")
+                                              decVar = "freqDec", preAggregate = preAggregate)
         if(output == "suppressed"){
           prikkData$prikk <- as.integer(prikkData$suppressed)
           return(prikkData)
