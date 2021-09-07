@@ -34,7 +34,7 @@
 #' @return data frame 
 #' @export
 #' @importFrom GaussSuppression GaussSuppressionFromData NcontributorsHolding Ncontributors GaussSuppressDec
-#' @importFrom SSBtools WildcardGlobbingVector SortRows
+#' @importFrom SSBtools WildcardGlobbingVector SortRows RowGroups
 #' @importFrom methods hasArg
 #' @importFrom stats aggregate
 #' @examples
@@ -76,7 +76,16 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             frtk="FRTK_ID_SSB", virk="VIRK_ID_SSB", unik = "UNIK_ID", 
                             makeunik = TRUE, removeZeros = !protectZeros, preAggregate = TRUE,
                             output = NULL,
-                            decimal = FALSE){
+                            decimal = FALSE, 
+                            freqDec = "freqDec"){
+  
+  if (is.data.frame(decimal)){
+    dataDec <- decimal
+    decimal <- FALSE
+  } else {
+    dataDec <- NULL
+  }
+  
   
   if (is.null(output)) 
     output = "rounded"
@@ -174,33 +183,52 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     }
     
     if(is.null(maxN)){
-      if(decimal & output == "suppressed"){
-        prikkData <-         GaussSuppressDec(data, dimVar = between , freqVar = freqVar, 
-                                              charVar = c(sector, "FRTK_VIRK_UNIK"), 
-                                              weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
-                                              secondaryZeros = secondaryZeros,
-                                              primary = Primary_FRTK_VIRK_UNIK_sektor, 
-                                              singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
-                                              sector = sector, private = private)
+      if(is.null(dataDec)){
+        if(decimal & output == "suppressed"){
+          prikkData <-         GaussSuppressDec(data, dimVar = between , freqVar = freqVar, 
+                                                charVar = c(sector, "FRTK_VIRK_UNIK"), 
+                                                weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
+                                                secondaryZeros = secondaryZeros,
+                                                primary = Primary_FRTK_VIRK_UNIK_sektor, 
+                                                singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
+                                                sector = sector, private = private)
+          rownames(prikkData) <- NULL
+        } else {
+          prikkData <- GaussSuppressionFromData(data, dimVar = between , freqVar = freqVar, 
+                                                charVar = c(sector, "FRTK_VIRK_UNIK"), 
+                                                weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
+                                                secondaryZeros = secondaryZeros,
+                                                primary = Primary_FRTK_VIRK_UNIK_sektor, 
+                                                singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
+                                                sector = sector, private = private)
+        }
+        
+        if(output == "suppressed"){
+          prikkData$prikk <- as.integer(prikkData$suppressed)
+          return(prikkData)
+        }
+        
+        # Lager prikkede kombinasjoner
+        supData <- GaussSuppressed(prikkData, between )
       } else {
-        prikkData <- GaussSuppressionFromData(data, dimVar = between , freqVar = freqVar, 
-                                              charVar = c(sector, "FRTK_VIRK_UNIK"), 
-                                              weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
-                                              secondaryZeros = secondaryZeros,
-                                              primary = Primary_FRTK_VIRK_UNIK_sektor, 
-                                              singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
-                                              sector = sector, private = private)
+        notInDataDec <- between[!(between %in% names(dataDec))]
+        if(length(notInDataDec)){
+          stop(paste("Mangler i decimal: ",paste(notInDataDec, collapse = ", ")))
+        }
+        
+        if(length(freqVar)){
+          uniqueBetween <-  RowGroups(data[data[[freqVar]]>0, between, drop=FALSE], TRUE)$groups 
+        } else {
+          uniqueBetween <-  RowGroups(data[between], TRUE)$groups 
+        }
+        ma<- Match(uniqueBetween, dataDec[between])
+        if(anyNA(ma)){
+          print(uniqueBetween[head(which(is.na(ma))), ,drop=FALSE])
+          stop("Finner ikke matchende rader i decimal")
+        }
       }
-      
-      if(output == "suppressed"){
-        prikkData$prikk <- as.integer(prikkData$suppressed)
-        return(prikkData)
-      }
-      
-      # Lager prikkede kombinasjoner
-      supData <- GaussSuppressed(prikkData, between )
-    } 
-  }
+    }  
+  } # if(length(between )>0){
   
   if(output == "suppressed") return(prikkData)
   
@@ -238,6 +266,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
       prikkData$isPublish <- as.integer(prikkData$isPublish)
       prikkData$isInner <- as.integer(prikkData$isInner)
       
+      rownames(prikkData) <- NULL
       return(prikkData)
     }
     if(length(between )>0){

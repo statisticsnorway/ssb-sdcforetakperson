@@ -25,7 +25,8 @@ SdcForetakPerson(
   removeZeros = !protectZeros,
   preAggregate = TRUE,
   output = NULL,
-  decimal = FALSE
+  decimal = FALSE,
+  freqDec = "freqDec"
 )
 }
 \arguments{
