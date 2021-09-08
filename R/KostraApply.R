@@ -6,10 +6,12 @@
 #' @param data Data frame
 #' @param by Vector of variable names (or variable numbers) defining the subsets or alternatively a named list or data frame (see examples).
 #' @param Fun Function to be applied on data subsets
+#' @param dataDec ekstra for SdcForetakPerson
+#' @param decimal ekstra for SdcForetakPerson
 #' @param ... Arguments passed to Fun
 #'
 #' @return A data.frame
-#' @export
+#' 
 #' @importFrom SSBtools RowGroups RbindAll
 #'
 #' @note The output ordering of the example depends on default.stringsAsFactors()

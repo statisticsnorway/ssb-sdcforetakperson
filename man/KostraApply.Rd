@@ -13,6 +13,10 @@ KostraApply(data, by, Fun, dataDec, decimal, ...)
 
 \item{Fun}{Function to be applied on data subsets}
 
+\item{dataDec}{ekstra for SdcForetakPerson}
+
+\item{decimal}{ekstra for SdcForetakPerson}
+
 \item{...}{Arguments passed to Fun}
 }
 \value{
