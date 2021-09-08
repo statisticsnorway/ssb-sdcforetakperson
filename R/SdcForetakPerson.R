@@ -99,6 +99,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   if (is.data.frame(decimal)){
     dataDec <- decimal
     decimal <- FALSE
+    nace <- NULL
   } else {
     dataDec <- NULL
   }
@@ -196,11 +197,12 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
       nace = NULL
     }
     
-    
-    if (!is.null(nace)) {
-      data$narWeight <- Make_NarWeight_00(data, nace, nace00)
-    } else {
-      data$narWeight <- 1L
+    if(is.null(dataDec)){
+      if (!is.null(nace)) {
+        data$narWeight <- Make_NarWeight_00(data, nace, nace00)
+      } else {
+        data$narWeight <- 1L
+      }
     }
     
     if(is.null(maxN)){
