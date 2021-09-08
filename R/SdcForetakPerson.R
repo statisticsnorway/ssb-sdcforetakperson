@@ -128,13 +128,13 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   
   
   if(!is.null(by)){
-    if(!is.null(dataDec)){
-     stop("Desimal-input kombinert med by er ikke implementert")
-    }
+    #if(!is.null(dataDec)){
+    # stop("Desimal-input kombinert med by er ikke implementert")
+    #}
     
     if(!(output %in% c("rounded", "suppressed")))
       stop('Output must be "rounded" or "suppressed" when non-NULL "by"')
-    return(KostraApply( data=data, by=by, Fun=SdcForetakPerson, 
+    return(KostraApply( data=data, by=by, Fun=SdcForetakPerson, dataDec = dataDec, 
                         between  = between , within = within, roundBase = roundBase, maxN = maxN, 
                         protectZeros = protectZeros, secondaryZeros = secondaryZeros, freqVar = freqVar,  
                         sector=sector, private = private,
