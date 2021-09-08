@@ -15,6 +15,7 @@
 #' @param private Privat-koden
 #' @param nace between-variabel med nace-kode eller koding (starter med) som leter etter slik variabel (`nace` kan settes til `NULL`) 
 #' @param nace00 nace-koden som foretrekkes til sekundærprikking  (`nace00` kan settes til `NULL`)
+#' @param nace00primary Ved FALSE utelates nace00-koden (se over) fra primærprikking  
 #' @param frtk foretak variabel 
 #' @param virk virksomhet variabel
 #' @param unik unik variabel  
@@ -90,6 +91,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             sector = "sektor",
                             private = "Privat",
                             nace = c("nar*", "NACE*", "nace*"), nace00="00",
+                            nace00primary = FALSE,
                             frtk="FRTK_ID_SSB", virk="VIRK_ID_SSB", unik = "UNIK_ID", 
                             makeunik = TRUE, removeZeros = !protectZeros, preAggregate = TRUE,
                             output = NULL,
@@ -139,7 +141,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                         between  = between , within = within, roundBase = roundBase, maxN = maxN, 
                         protectZeros = protectZeros, secondaryZeros = secondaryZeros, freqVar = freqVar,  
                         sector=sector, private = private,
-                        nace = nace, nace00=nace00, frtk=frtk, virk=virk, unik =unik, makeunik =makeunik, 
+                        nace = nace, nace00=nace00, nace00primary = nace00primary, 
+                        frtk=frtk, virk=virk, unik =unik, makeunik =makeunik, 
                         removeZeros = removeZeros, preAggregate = preAggregate, output = output, decimal = decimal)) 
   }
   
@@ -197,9 +200,14 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
       nace = NULL
     }
     
+    Primary_FRTK_VIRK_UNIK_sektor_here <- Primary_FRTK_VIRK_UNIK_sektor
+    
     if(is.null(dataDec)){
       if (!is.null(nace)) {
         data$narWeight <- Make_NarWeight_00(data, nace, nace00)
+        if(!nace00primary){
+          Primary_FRTK_VIRK_UNIK_sektor_here <- c(Primary_FRTK_VIRK_UNIK_sektor, Primary_NA_when_weight_is_0)
+        }
       } else {
         data$narWeight <- 1L
       }
@@ -212,7 +220,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                                 charVar = c(sector, "FRTK_VIRK_UNIK"), 
                                                 weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
                                                 secondaryZeros = secondaryZeros,
-                                                primary = Primary_FRTK_VIRK_UNIK_sektor, 
+                                                primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
                                                 singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
                                                 sector = sector, private = private, output = "both")
           dimVarOut <- between[between %in% names(a$publish)]
@@ -228,7 +236,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                                 charVar = c(sector, "FRTK_VIRK_UNIK"), 
                                                 weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
                                                 secondaryZeros = secondaryZeros,
-                                                primary = Primary_FRTK_VIRK_UNIK_sektor, 
+                                                primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
                                                 singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
                                                 sector = sector, private = private)
         }
@@ -279,7 +287,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                               charVar = c(sector, "FRTK_VIRK_UNIK"), 
                                               weightVar = "narWeight", protectZeros = protectZeros, maxN = maxN,
                                               secondaryZeros = secondaryZeros,
-                                              primary = Primary_FRTK_VIRK_UNIK_sektor, # singleton = NULL, singletonMethod = "none", 
+                                              primary = Primary_FRTK_VIRK_UNIK_sektor_here, # singleton = NULL, singletonMethod = "none", 
                                               preAggregate = preAggregate,
                                               sector = sector, private = private, between = between)
       } else {
@@ -313,7 +321,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                             charVar = c(sector, "FRTK_VIRK_UNIK"), 
                                             weightVar = "narWeight", protectZeros = protectZeros, maxN = maxN,
                                             secondaryZeros = secondaryZeros,
-                                            primary = Primary_FRTK_VIRK_UNIK_sektor, # singleton = NULL, singletonMethod = "none", 
+                                            primary = Primary_FRTK_VIRK_UNIK_sektor_here, # singleton = NULL, singletonMethod = "none", 
                                             preAggregate = preAggregate,
                                             sector = sector, private = private, between = between)
     } else {
