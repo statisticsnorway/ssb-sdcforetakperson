@@ -222,7 +222,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                                 secondaryZeros = secondaryZeros,
                                                 primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
                                                 singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
-                                                sector = sector, private = private, output = "both")
+                                                sector = sector, private = private, output = "publish_inner")
           dimVarOut <- between[between %in% names(a$publish)]
           ma <- Match(a$publish[dimVarOut], a$inner[dimVarOut])
           prikkData <- cbind(a$inner[ma[!is.na(ma)], between, drop = FALSE], 
