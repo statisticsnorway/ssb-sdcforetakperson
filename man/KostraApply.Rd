@@ -4,7 +4,7 @@
 \alias{KostraApply}
 \title{Apply a function with data frame output over data subsets}
 \usage{
-KostraApply(data, by, Fun, ...)
+KostraApply(data, by, Fun, dataDec, decimal, ...)
 }
 \arguments{
 \item{data}{Data frame}
@@ -13,13 +13,17 @@ KostraApply(data, by, Fun, ...)
 
 \item{Fun}{Function to be applied on data subsets}
 
+\item{dataDec}{ekstra for SdcForetakPerson}
+
+\item{decimal}{ekstra for SdcForetakPerson}
+
 \item{...}{Arguments passed to Fun}
 }
 \value{
 A data.frame
 }
 \description{
-Funksjonen er kopiert fra Kostra-pakken
+Funksjonen er kopiert fra Kostra-pakken og det er lagt in ekstra for å håndtere desimaltallsinput.
 }
 \note{
 The output ordering of the example depends on default.stringsAsFactors()

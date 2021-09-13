@@ -18,6 +18,7 @@ SdcForetakPerson(
   private = "Privat",
   nace = c("nar*", "NACE*", "nace*"),
   nace00 = "00",
+  nace00primary = FALSE,
   frtk = "FRTK_ID_SSB",
   virk = "VIRK_ID_SSB",
   unik = "UNIK_ID",
@@ -55,6 +56,8 @@ SdcForetakPerson(
 \item{nace}{between-variabel med nace-kode eller koding (starter med) som leter etter slik variabel (\code{nace} kan settes til \code{NULL})}
 
 \item{nace00}{nace-koden som foretrekkes til sekundærprikking  (\code{nace00} kan settes til \code{NULL})}
+
+\item{nace00primary}{Ved FALSE utelates nace00-koden (se over) fra primærprikking}
 
 \item{frtk}{foretak variabel}
 
