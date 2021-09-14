@@ -36,7 +36,10 @@
 #' 
 #' **Ved `decimal` som en data-frame og når maxN er NULL** antas at dette er indre celle-data med desimaltall. Prikking vil baseres på aggregering av disse.                                  
 #' 
-#' @param freqDec Navn på variabel med desimaltall. Brukes når `decimal` er en data-frame. 
+#' @param freqDec Navn på variabel(er) med desimaltall eller koding (starter med). Brukes når `decimal` er en data-frame. 
+#' @param nRep Antall desimaltallsvariabler, \code{\link{GaussSuppressDec}} parameter.
+#' @param digitsA  \code{\link{GaussSuppressDec}} parameter (9 er vanligvis ok)
+#' @param digitsB  \code{\link{SuppressionFromDecimals}} parameter (5 er ok når nRep=3)
 #' 
 #' @return data frame 
 #' @export
@@ -96,7 +99,10 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             makeunik = TRUE, removeZeros = !protectZeros, preAggregate = TRUE,
                             output = NULL,
                             decimal = FALSE, 
-                            freqDec = "freqDec"){
+                            freqDec = "freqDec*",
+                            nRep = 3,
+                            digitsA = 9,
+                            digitsB = 5){
   
   if (is.data.frame(decimal)){
     dataDec <- decimal
@@ -143,7 +149,9 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                         sector=sector, private = private,
                         nace = nace, nace00=nace00, nace00primary = nace00primary, 
                         frtk=frtk, virk=virk, unik =unik, makeunik =makeunik, 
-                        removeZeros = removeZeros, preAggregate = preAggregate, output = output, decimal = decimal)) 
+                        removeZeros = removeZeros, preAggregate = preAggregate, output = output, 
+                        decimal = decimal, freqDec = freqDec, 
+                        nRep = nRep, digitsA = digitsA, digitsB = digitsB)) 
   }
   
   CheckInput(between, type = "varNrName", data = data, okNULL = TRUE, okSeveral = TRUE)
@@ -222,7 +230,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                                 secondaryZeros = secondaryZeros,
                                                 primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
                                                 singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
-                                                sector = sector, private = private, output = "publish_inner")
+                                                sector = sector, private = private, output = "publish_inner",
+                                                nRep = nRep, digits = digitsA,  mismatchWarning = digitsB)
           dimVarOut <- between[between %in% names(a$publish)]
           ma <- Match(a$publish[dimVarOut], a$inner[dimVarOut])
           prikkData <- cbind(a$inner[ma[!is.na(ma)], between, drop = FALSE], 
@@ -264,8 +273,12 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
           print(uniqueBetween[head(which(is.na(ma))), ,drop=FALSE])
           stop("Finner ikke matchende rader i decimal")
         }
+        freqDecNames <- WildcardGlobbingVector(names(dataDec), freqDec)
+        if(!length(freqDecNames)){
+          stop("Ingen freqDec-variabelnavn funnet")
+        }
         prikkData <- SuppressionFromDecimals(dataDec, dimVar = between , freqVar = "freq", 
-                                              decVar = "freqDec", preAggregate = preAggregate)
+                                              decVar = freqDecNames, preAggregate = preAggregate, digits = digitsB)
         if(output == "suppressed"){
           prikkData$prikk <- as.integer(prikkData$suppressed)
           return(prikkData)
@@ -289,12 +302,14 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                               secondaryZeros = secondaryZeros,
                                               primary = Primary_FRTK_VIRK_UNIK_sektor_here, # singleton = NULL, singletonMethod = "none", 
                                               preAggregate = preAggregate,
-                                              sector = sector, private = private, between = between)
+                                              sector = sector, private = private, between = between,
+                                              nRep = nRep, digits = digitsA,  mismatchWarning = digitsB)
       } else {
         prikkData <- GaussSuppressDec(data, dimVar = alleVar, freqVar = freqVar, 
                                               protectZeros = protectZeros, maxN = maxN, 
                                               secondaryZeros = secondaryZeros,
-                                              preAggregate = preAggregate)
+                                              preAggregate = preAggregate,
+                                              nRep = nRep, digits = digitsA,  mismatchWarning = digitsB)
       }
       
       

@@ -27,7 +27,10 @@ SdcForetakPerson(
   preAggregate = TRUE,
   output = NULL,
   decimal = FALSE,
-  freqDec = "freqDec"
+  freqDec = "freqDec*",
+  nRep = 3,
+  digitsA = 9,
+  digitsB = 5
 )
 }
 \arguments{
@@ -88,7 +91,13 @@ Her kan det bli endring.}
 
 \strong{Ved \code{decimal} som en data-frame og når maxN er NULL} antas at dette er indre celle-data med desimaltall. Prikking vil baseres på aggregering av disse.}
 
-\item{freqDec}{Navn på variabel med desimaltall. Brukes når \code{decimal} er en data-frame.}
+\item{freqDec}{Navn på variabel(er) med desimaltall eller koding (starter med). Brukes når \code{decimal} er en data-frame.}
+
+\item{nRep}{Antall desimaltallsvariabler, \code{\link{GaussSuppressDec}} parameter.}
+
+\item{digitsA}{\code{\link{GaussSuppressDec}} parameter (9 er vanligvis ok)}
+
+\item{digitsB}{\code{\link{SuppressionFromDecimals}} parameter (5 er ok når nRep=3)}
 }
 \value{
 data frame
