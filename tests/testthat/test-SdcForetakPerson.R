@@ -46,14 +46,12 @@ test_that("KOde for ArbForhold og Lonnstaker", {
     prikk
   }
   
-  expect_identical(GF(z, prikkeVarB , "ArbForhold", maxN = -1), 343708129)
-  expect_identical(GF(z, prikkeVarB , "ArbForhold", maxN = 5), 343708806)
-  expect_identical(GF(z, prikkeVarB , "Lonnstaker", maxN = -1), 343542404)
+  expect_identical(GF(z, prikkeVarB , "ArbForhold", maxN = -1), 343700515)
+  expect_identical(GF(z, prikkeVarB , "ArbForhold", maxN = 5), 343710393)
+  expect_identical(GF(z, prikkeVarB , "Lonnstaker", maxN = -1), 343527078)
   expect_identical(GF(z, prikkeVarB , "Lonnstaker", maxN = 5), 343533630)
-  expect_identical(GF(z, prikkeVarB , "ArbForhold", maxN = -1, weightVar =NULL), 343701799)
+  expect_identical(GF(z, prikkeVarB , "ArbForhold", maxN = -1, weightVar =NULL), 343693162)
   expect_identical(suppressWarnings(GF(z, prikkeVarB , "ArbForhold", maxN = 5, protectZeros =TRUE)), 343701795)
-
-  
 })
 
 
