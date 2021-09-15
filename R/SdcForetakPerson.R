@@ -338,12 +338,14 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                             secondaryZeros = secondaryZeros,
                                             primary = Primary_FRTK_VIRK_UNIK_sektor_here, # singleton = NULL, singletonMethod = "none", 
                                             preAggregate = preAggregate,
-                                            sector = sector, private = private, between = between)
+                                            sector = sector, private = private, between = between,
+                                            singletonMethod = "anySumNOTprimary")
     } else {
       prikkData <- GaussSuppressionFromData(data, dimVar = alleVar, freqVar = freqVar, 
                                             protectZeros = protectZeros, maxN = maxN, 
                                             secondaryZeros = secondaryZeros,
-                                            preAggregate = preAggregate)
+                                            preAggregate = preAggregate,
+                                            singletonMethod = "anySumNOTprimary")
     }
 
     ############################################
