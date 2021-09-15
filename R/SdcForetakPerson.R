@@ -294,6 +294,10 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   
   
   if(!is.null(maxN)){
+    
+    # Når nace00primary = FALSE kan noen enere være ikke-primærprikket
+    singletonMethod = ifelse(secondaryZeros | !nace00primary, "anySumNOTprimary", "anySum")
+    
     if(decimal){
       if(length(between )>0){
         prikkData <- GaussSuppressDec(data, dimVar = alleVar, freqVar = freqVar, 
@@ -303,13 +307,15 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                               primary = Primary_FRTK_VIRK_UNIK_sektor_here, # singleton = NULL, singletonMethod = "none", 
                                               preAggregate = preAggregate,
                                               sector = sector, private = private, between = between,
-                                              nRep = nRep, digits = digitsA,  mismatchWarning = digitsB)
+                                              nRep = nRep, digits = digitsA,  mismatchWarning = digitsB, 
+                                              singletonMethod = singletonMethod)
       } else {
         prikkData <- GaussSuppressDec(data, dimVar = alleVar, freqVar = freqVar, 
                                               protectZeros = protectZeros, maxN = maxN, 
                                               secondaryZeros = secondaryZeros,
                                               preAggregate = preAggregate,
-                                              nRep = nRep, digits = digitsA,  mismatchWarning = digitsB)
+                                              nRep = nRep, digits = digitsA,  mismatchWarning = digitsB,
+                                              singletonMethod = singletonMethod)
       }
       
       
@@ -339,13 +345,13 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                             primary = Primary_FRTK_VIRK_UNIK_sektor_here, # singleton = NULL, singletonMethod = "none", 
                                             preAggregate = preAggregate,
                                             sector = sector, private = private, between = between,
-                                            singletonMethod = "anySumNOTprimary")
+                                            singletonMethod = singletonMethod)
     } else {
       prikkData <- GaussSuppressionFromData(data, dimVar = alleVar, freqVar = freqVar, 
                                             protectZeros = protectZeros, maxN = maxN, 
                                             secondaryZeros = secondaryZeros,
                                             preAggregate = preAggregate,
-                                            singletonMethod = "anySumNOTprimary")
+                                            singletonMethod = singletonMethod)
     }
 
     ############################################
