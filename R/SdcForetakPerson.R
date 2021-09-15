@@ -363,8 +363,13 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     return(prikkData)
   }
   
+  cat("[aggregate for PLSroundingSuppressed ", dim(data)[1], "*", dim(data)[2], "->", sep = "")
+  flush.console()
   
   aggData <- aggregate(data[, freqVar, drop = FALSE], data[, alleVar], sum)
+  
+  cat(dim(aggData)[1], "*", dim(aggData)[2], "]\n", sep = "")
+  flush.console()
   
   
   prsData <- PLSroundingSuppressed(aggData, freqVar, dataSuppressed = supData, roundBase = roundBase)
