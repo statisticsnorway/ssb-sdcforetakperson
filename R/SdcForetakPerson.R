@@ -113,6 +113,10 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     dataDec <- NULL
   }
   
+  if( !is.null(dataDec) & !is.null(maxN)){
+    stop("Desimal-input foreløpig ikke implementert når parameter maxN brukes")
+  }
+  
   
   if (is.null(output)) 
     output = "rounded"
