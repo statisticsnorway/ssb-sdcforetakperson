@@ -80,16 +80,9 @@ Parameteren har betydning for telling av antall foretak bak et tall.}
 \item{output}{Ved avrunding kan ulike type output velges. Enten "rounded" (samme som NULL) eller "suppressed" (liste med begge hvis noe annet).
 Her kan det bli endring.}
 
-\item{decimal}{\strong{Ved TRUE og når maxN er ikke-NULL} kjøres \code{\link{GaussSuppressDec}}. Ekstra kolloner i output er
-\itemize{
-\item \strong{\code{freqDec}:} Heltall og syntetiske desimaltall istedenfor prikker.
-\item \strong{\code{isPublish}:} Om dette er en vanlig output-celle.
-\item \strong{\code{isInner}:} Om dette er en indre celle som kan benyttes til aggregering av andre celler.
-}
+\item{decimal}{\strong{Ved TRUE} returneres indre celle-data med desimaltall. Dette kan fungere som input seinere (se nedenfor).
 
-\strong{Ved TRUE og når maxN er NULL} returneres indre celle-data med desimaltall. Dette kan fungere som input seinere (se nedenfor).
-
-\strong{Ved \code{decimal} som en data-frame og når maxN er NULL} antas at dette er indre celle-data med desimaltall. Prikking vil baseres på aggregering av disse.}
+\strong{Ved \code{decimal} som en data-frame} antas at dette er indre celle-data med desimaltall. Prikking vil baseres på aggregering av disse.}
 
 \item{freqDec}{Navn på variabel(er) med desimaltall eller koding (starter med). Brukes når \code{decimal} er en data-frame.}
 

@@ -27,14 +27,9 @@
 #' @param preAggregate Input til \code{\link{GaussSuppressionFromData}}. Parameteren er med her for testing og sammenlikning av resultater. 
 #' @param output Ved avrunding kan ulike type output velges. Enten "rounded" (samme som NULL) eller "suppressed" (liste med begge hvis noe annet). 
 #'               Her kan det bli endring. 
-#' @param decimal **Ved TRUE og når maxN er ikke-NULL** kjøres \code{\link{GaussSuppressDec}}. Ekstra kolloner i output er
-#' * **`freqDec`:** Heltall og syntetiske desimaltall istedenfor prikker.
-#' * **`isPublish`:** Om dette er en vanlig output-celle. 
-#' * **`isInner`:** Om dette er en indre celle som kan benyttes til aggregering av andre celler.
-#' 
-#' **Ved TRUE og når maxN er NULL** returneres indre celle-data med desimaltall. Dette kan fungere som input seinere (se nedenfor).    
-#' 
-#' **Ved `decimal` som en data-frame og når maxN er NULL** antas at dette er indre celle-data med desimaltall. Prikking vil baseres på aggregering av disse.                                  
+#' @param decimal **Ved TRUE** returneres indre celle-data med desimaltall. Dette kan fungere som input seinere (se nedenfor).  
+#'   
+#' **Ved `decimal` som en data-frame** antas at dette er indre celle-data med desimaltall. Prikking vil baseres på aggregering av disse.                                  
 #' 
 #' @param freqDec Navn på variabel(er) med desimaltall eller koding (starter med). Brukes når `decimal` er en data-frame. 
 #' @param nRep Antall desimaltallsvariabler, \code{\link{GaussSuppressDec}} parameter.
@@ -112,10 +107,6 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   } else {
     dataDec <- NULL
   }
-  
-  #if( !is.null(dataDec) & !is.null(maxN)){
-  #  stop("Desimal-input foreløpig ikke implementert når parameter maxN brukes")
-  #}
   
   
   if (is.null(output)) 
@@ -323,7 +314,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                               singletonMethod = singletonMethod, output = "publish_inner")
       }
       
-      between <- alleVar
+      between <- alleVar # endrer siden delvis gjenbruk av kode 
       
       dimVarOut <- between[between %in% names(a$publish)]
       ma <- Match(a$publish[dimVarOut], a$inner[dimVarOut])
@@ -334,20 +325,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
       rownames(prikkData) <- NULL
       return(prikkData)
       
-      
-      #prikkData$primary <- as.integer(prikkData$primary)
-      #prikkData$suppressed <- as.integer(prikkData$suppressed)
-      # Tar bort weight og inn med prikket på samme plass
-      #names(prikkData)[names(prikkData) == "weight"] <- "prikket"
-      #prikkData$prikket <- prikkData$freq
-      #prikkData$prikket[prikkData$suppressed==1] <- NA
-      
-      # Endrer mer fra TRUE/FALSE til 0/1 for å være konsekvent 
-      #prikkData$isPublish <- as.integer(prikkData$isPublish)
-      #prikkData$isInner <- as.integer(prikkData$isInner)
-      
-      #rownames(prikkData) <- NULL
-      #return(prikkData)
+
     }  
     if(is.null(dataDec)){
       if(length(between )>0){
@@ -368,7 +346,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
       }
     } else {
       
-      between <- alleVar
+      between <- alleVar # endrer siden delvis gjenbruk av kode 
       
       notInDataDec <- between[!(between %in% names(dataDec))]
       if(length(notInDataDec)){
@@ -391,6 +369,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
       }
       prikkData <- SuppressionFromDecimals(dataDec, dimVar = between, freqVar = "freq", 
                                            decVar = freqDecNames, preAggregate = preAggregate, digits = digitsB)
+      prikkData <- prikkData[!(names(prikkData) %in% c(freqDecNames, "primary"))] 
       
     }
 
@@ -398,13 +377,17 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     # Endring foreløpig output til å være lik tidligere ArbForhold/Lonnstaker 
     ############################################
     # Endrer fra TRUE/FALSE til 0/1
-    prikkData$primary <- as.integer(prikkData$primary)
+    
+    if(!is.null(prikkData$primary))
+      prikkData$primary <- as.integer(prikkData$primary)
     prikkData$suppressed <- as.integer(prikkData$suppressed)
     # Tar bort weight og inn med prikket på samme plass
     names(prikkData)[names(prikkData) == "weight"] <- "prikket"
     prikkData$prikket <- prikkData$freq
     prikkData$prikket[prikkData$suppressed==1] <- NA
     
+    
+    rownames(prikkData) <- NULL
     
     return(prikkData)
   }
