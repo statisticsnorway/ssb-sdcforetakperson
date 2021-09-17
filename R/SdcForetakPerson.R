@@ -47,6 +47,7 @@
 #' @importFrom SSBtools WildcardGlobbingVector SortRows RowGroups Match
 #' @importFrom methods hasArg
 #' @importFrom stats aggregate
+#' @importFrom utils flush.console
 #' @examples
 #' 
 #' prikkeVarA <- c("arb_fylke", "ARB_ARBKOMM", "nar8", "sektor")

@@ -58,6 +58,7 @@ sup <- GaussSuppression::GaussSuppressionFromData(z3, c(1, 2, 4), 7)
 sup <- sup[sup$suppressed, !(names(sup) \%in\% c("freq", "primary", "suppressed"))]
 b <- PLSroundingSuppressed(z3[, -c(3, 6)], "ant", sup, roundBase = 3)
 
+\dontrun{
 if (require(easySdcTable)) {
   sup <- ProtectTable(EasyData("z1"), 1:2, 3, method = "Gauss")$data
   sup <- sup[is.na(sup$suppressed), !(names(sup) \%in\% c("freq", "sdcStatus", "suppressed"))]
@@ -68,6 +69,7 @@ if (require(easySdcTable)) {
   sup <- sup[is.na(sup$suppressed), !(names(sup) \%in\% c("freq", "sdcStatus", "suppressed"))]
   b_ <- PLSroundingSuppressed(z3[, -c(3, 6)], "ant", sup, roundBase = 3)
   print(identical(b, b_))
+}
 }
 
 }
