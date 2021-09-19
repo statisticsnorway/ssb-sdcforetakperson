@@ -4,10 +4,12 @@
 \alias{SdcForetakPersonDecimalTest}
 \title{Test av SdcForetakPerson med decimal}
 \usage{
-SdcForetakPersonDecimalTest(...)
+SdcForetakPersonDecimalTest(..., stopWhenFALSE = TRUE)
 }
 \arguments{
 \item{...}{SdcForetakPerson-parametere}
+
+\item{stopWhenFALSE}{Feiler ved FALSE når TRUE}
 }
 \value{
 logical
