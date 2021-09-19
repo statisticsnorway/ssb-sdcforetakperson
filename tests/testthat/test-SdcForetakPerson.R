@@ -70,20 +70,18 @@ test_that("Med ren GaussSuppressionFromData", {
 
 test_that("SdcForetakPerson med decimal", {
 
-  GD <- function(...) SdcForetakPerson(...)
-  a1 <- GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE, maxN = 2)
-  a2 <- suppressWarnings(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE, maxN = 2))
-  a3 <- GD(z, prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE, maxN = 5)
+  GD <- SdcForetakPersonDecimalTest
+  expect_true(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE, maxN = 2))
+  expect_true(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE, maxN = 2))
+  expect_true(GD(z, prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE, maxN = 5))
   
+  expect_true(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE))
+  expect_true(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE))
+  expect_true(GD(z, prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE))
   
-  GD <- function(...) SdcForetakPerson(..., decimal = TRUE)
-  b1 <- GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE, maxN = 2)
-  b2 <- suppressWarnings(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE, maxN = 2))
-  b3 <- GD(z, prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE, maxN = 5)
-  
-  expect_equivalent(b1[b1$isPublish == 1, names(a1)], a1)
-  expect_equivalent(b2[b2$isPublish == 1, names(a2)], a2)
-  expect_equivalent(b3[b3$isPublish == 1, names(a3)], a3)
+  expect_true(GD(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), nace00="85")) 
+  expect_true(GD(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"))) 
+
 })
 
 
