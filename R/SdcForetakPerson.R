@@ -41,7 +41,7 @@
 #' @importFrom GaussSuppression GaussSuppressionFromData NcontributorsHolding Ncontributors GaussSuppressDec SuppressionFromDecimals
 #' @importFrom SSBtools WildcardGlobbingVector SortRows RowGroups Match
 #' @importFrom methods hasArg
-#' @importFrom stats aggregate
+#' @importFrom stats aggregate delete.response formula terms
 #' @importFrom utils flush.console
 #' @examples
 #' 
@@ -106,6 +106,18 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     nace <- NULL
   } else {
     dataDec <- NULL
+  }
+  
+  if(class(between)[1] == "formula"){
+    if(!decimal | !is.null(maxN)){
+      stop("between som formel bare implementert for decimal=TRUE/maxN=NULL")
+    }
+    formula_decimal <- between
+    dimVar_decimal <- NULL 
+    between <- row.names(attr(delete.response(terms(formula_decimal)), "factors"))
+  } else {
+    formula_decimal <- NULL
+    dimVar_decimal <- between
   }
   
   
@@ -220,14 +232,21 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     if(is.null(maxN)){
       if(is.null(dataDec)){
         if(decimal){
-          a <-         GaussSuppressDec(data, dimVar = between , freqVar = freqVar, 
+          a <-         GaussSuppressDec(data, dimVar = dimVar_decimal, freqVar = freqVar, 
+                                        formula = formula_decimal,
                                                 charVar = c(sector, "FRTK_VIRK_UNIK"), 
                                                 weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
                                                 secondaryZeros = secondaryZeros,
                                                 primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
                                                 singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
-                                                sector = sector, private = private, output = "publish_inner",
+                                                sector = sector, private = private, #output = "publish_inner",
+                                        output = ifelse(is.null(formula), "publish_inner", "inner"),
                                                 nRep = nRep, digits = digitsA,  mismatchWarning = digitsB)
+          if(!is.null(formula)){
+            names(a)[names(a) == freqVar] <- "freq"
+            return(a[names(a) != "narWeight"])
+          }
+          
           dimVarOut <- between[between %in% names(a$publish)]
           ma <- Match(a$publish[dimVarOut], a$inner[dimVarOut])
           prikkData <- cbind(a$inner[ma[!is.na(ma)], between, drop = FALSE], 
