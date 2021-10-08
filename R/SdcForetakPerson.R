@@ -114,18 +114,6 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     dataDec <- NULL
   }
   
-  if(class(between)[1] == "formula"){
-    if(!decimal | !is.null(maxN)){
-      stop("between som formel bare implementert for decimal=TRUE/maxN=NULL")
-    }
-    formula_decimal <- between
-    dimVar_decimal <- NULL 
-    between <- row.names(attr(delete.response(terms(formula_decimal)), "factors"))
-  } else {
-    formula_decimal <- NULL
-    dimVar_decimal <- between
-  }
-  
   
   if (is.null(output)) 
     output = "rounded"
@@ -166,6 +154,18 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                         removeZeros = removeZeros, preAggregate = preAggregate, output = output, 
                         decimal = decimal, freqDec = freqDec, 
                         nRep = nRep, digitsA = digitsA, digitsB = digitsB)) 
+  }
+  
+  if(class(between)[1] == "formula"){
+    if(!decimal | !is.null(maxN)){
+      stop("between som formel bare implementert for decimal=TRUE/maxN=NULL")
+    }
+    formula_decimal <- between
+    dimVar_decimal <- NULL 
+    between <- row.names(attr(delete.response(terms(formula_decimal)), "factors"))
+  } else {
+    formula_decimal <- NULL
+    dimVar_decimal <- between
   }
   
   CheckInput(between, type = "varNrName", data = data, okNULL = TRUE, okSeveral = TRUE)
