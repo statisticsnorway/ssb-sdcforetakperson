@@ -246,9 +246,10 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                                 primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
                                                 singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
                                                 sector = sector, private = private, #output = "publish_inner",
-                                        output = ifelse(is.null(formula), "publish_inner", "inner"),
+                                        output = ifelse(is.null(formula_decimal), "publish_inner", "inner"),
                                                 nRep = nRep, digits = digitsA,  mismatchWarning = digitsB)
-          if(!is.null(formula)){
+          
+          if(!is.null(formula_decimal)){
             names(a)[names(a) == freqVar] <- "freq"
             return(a[names(a) != "narWeight"])
           }
