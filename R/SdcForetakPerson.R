@@ -28,6 +28,7 @@
 #' @param output Ved avrunding kan ulike type output velges. Enten "rounded" (samme som NULL) eller "suppressed" (liste med begge hvis noe annet). 
 #'               Her kan det bli endring. 
 #' @param decimal **Ved TRUE** returneres indre celle-data med desimaltall. Dette kan fungere som input seinere (se nedenfor).  
+#'                Når, i tillegg, `maxN` er `NULL` (default), er det mulig å spesifisere `between` som en formel (se eksempel).
 #'   
 #' **Ved `decimal` som en data-frame** antas at dette er indre celle-data med desimaltall. Prikking vil baseres på aggregering av disse.                                  
 #' 
@@ -41,7 +42,7 @@
 #' @importFrom GaussSuppression GaussSuppressionFromData NcontributorsHolding Ncontributors GaussSuppressDec SuppressionFromDecimals
 #' @importFrom SSBtools WildcardGlobbingVector SortRows RowGroups Match
 #' @importFrom methods hasArg
-#' @importFrom stats aggregate
+#' @importFrom stats aggregate delete.response formula terms
 #' @importFrom utils flush.console
 #' @examples
 #' 
@@ -75,6 +76,11 @@
 #' outA <- SdcForetakPerson(z100, between = prikkeVarA, decimal = dataDec)
 #' outB <- SdcForetakPerson(z100, between = prikkeVarB, within = "PERS_KJOENN", decimal = dataDec)
 #' 
+#' # Desimaltall kan genereres med formel 
+#' dataDec2 <- SdcForetakPerson(z100, between = 
+#'                  ~(arb_fylke + ARB_ARBKOMM) * nar8 * sektor + (arb_fylke + ARB_ARBKOMM) * nar17, 
+#'                  nace = "nar8", decimal = TRUE)
+#' 
 #' # Lager data med to stataar
 #' z100$stataar <- "2019"
 #' z$stataar <- "2020"
@@ -106,6 +112,18 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     nace <- NULL
   } else {
     dataDec <- NULL
+  }
+  
+  if(class(between)[1] == "formula"){
+    if(!decimal | !is.null(maxN)){
+      stop("between som formel bare implementert for decimal=TRUE/maxN=NULL")
+    }
+    formula_decimal <- between
+    dimVar_decimal <- NULL 
+    between <- row.names(attr(delete.response(terms(formula_decimal)), "factors"))
+  } else {
+    formula_decimal <- NULL
+    dimVar_decimal <- between
   }
   
   
@@ -220,14 +238,21 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     if(is.null(maxN)){
       if(is.null(dataDec)){
         if(decimal){
-          a <-         GaussSuppressDec(data, dimVar = between , freqVar = freqVar, 
+          a <-         GaussSuppressDec(data, dimVar = dimVar_decimal, freqVar = freqVar, 
+                                        formula = formula_decimal,
                                                 charVar = c(sector, "FRTK_VIRK_UNIK"), 
                                                 weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
                                                 secondaryZeros = secondaryZeros,
                                                 primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
                                                 singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
-                                                sector = sector, private = private, output = "publish_inner",
+                                                sector = sector, private = private, #output = "publish_inner",
+                                        output = ifelse(is.null(formula), "publish_inner", "inner"),
                                                 nRep = nRep, digits = digitsA,  mismatchWarning = digitsB)
+          if(!is.null(formula)){
+            names(a)[names(a) == freqVar] <- "freq"
+            return(a[names(a) != "narWeight"])
+          }
+          
           dimVarOut <- between[between %in% names(a$publish)]
           ma <- Match(a$publish[dimVarOut], a$inner[dimVarOut])
           prikkData <- cbind(a$inner[ma[!is.na(ma)], between, drop = FALSE], 
