@@ -28,6 +28,7 @@
 #' @param output Ved avrunding kan ulike type output velges. Enten "rounded" (samme som NULL) eller "suppressed" (liste med begge hvis noe annet). 
 #'               Her kan det bli endring. 
 #' @param decimal **Ved TRUE** returneres indre celle-data med desimaltall. Dette kan fungere som input seinere (se nedenfor).  
+#'                Når, i tillegg, `maxN` er `NULL` (default), er det mulig å spesifisere `between` som en formel (se eksempel).
 #'   
 #' **Ved `decimal` som en data-frame** antas at dette er indre celle-data med desimaltall. Prikking vil baseres på aggregering av disse.                                  
 #' 
@@ -74,6 +75,11 @@
 #' # Bruker desimaltall som utgangspunkt for prikking
 #' outA <- SdcForetakPerson(z100, between = prikkeVarA, decimal = dataDec)
 #' outB <- SdcForetakPerson(z100, between = prikkeVarB, within = "PERS_KJOENN", decimal = dataDec)
+#' 
+#' # Desimaltall kan genereres med formel 
+#' dataDec2 <- SdcForetakPerson(z100, between = 
+#'                  ~(arb_fylke + ARB_ARBKOMM) * nar8 * sektor + (arb_fylke + ARB_ARBKOMM) * nar17, 
+#'                  nace = "nar8", decimal = TRUE)
 #' 
 #' # Lager data med to stataar
 #' z100$stataar <- "2019"
