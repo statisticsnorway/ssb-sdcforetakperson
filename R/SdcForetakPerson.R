@@ -36,6 +36,7 @@
 #' @param nRep Antall desimaltallsvariabler, \code{\link{GaussSuppressDec}} parameter.
 #' @param digitsA  \code{\link{GaussSuppressDec}} parameter (9 er vanligvis ok)
 #' @param digitsB  \code{\link{SuppressionFromDecimals}} parameter (5 er ok når nRep=3)
+#' @param allowTotal Når TRUE, ingen prikking når alle within-variabler er `"Total"`. 
 #' 
 #' @return data frame 
 #' @export
@@ -104,7 +105,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             freqDec = "freqDec*",
                             nRep = 3,
                             digitsA = 9,
-                            digitsB = 5){
+                            digitsB = 5,
+                            allowTotal = TRUE){
   
   if (is.data.frame(decimal)){
     dataDec <- decimal
@@ -153,7 +155,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                         frtk=frtk, virk=virk, unik =unik, makeunik =makeunik, 
                         removeZeros = removeZeros, preAggregate = preAggregate, output = output, 
                         decimal = decimal, freqDec = freqDec, 
-                        nRep = nRep, digitsA = digitsA, digitsB = digitsB)) 
+                        nRep = nRep, digitsA = digitsA, digitsB = digitsB,
+                        allowTotal = allowTotal)) 
   }
   
   if(class(between)[1] == "formula"){
@@ -330,7 +333,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                               preAggregate = preAggregate,
                                               sector = sector, private = private, between = between,
                                               nRep = nRep, digits = digitsA,  mismatchWarning = digitsB, 
-                                              singletonMethod = singletonMethod, output = "publish_inner")
+                                              singletonMethod = singletonMethod, output = "publish_inner",
+                                              allowTotal = allowTotal)
       } else {
         a <- GaussSuppressDec(data, dimVar = alleVar, freqVar = freqVar, 
                                               protectZeros = protectZeros, maxN = maxN, 
@@ -362,7 +366,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                               primary = Primary_FRTK_VIRK_UNIK_sektor_here, # singleton = NULL, singletonMethod = "none", 
                                               preAggregate = preAggregate,
                                               sector = sector, private = private, between = between,
-                                              singletonMethod = singletonMethod)
+                                              singletonMethod = singletonMethod,
+                                              allowTotal = allowTotal)
       } else {
         prikkData <- GaussSuppressionFromData(data, dimVar = alleVar, freqVar = freqVar, 
                                               protectZeros = protectZeros, maxN = maxN, 
@@ -427,7 +432,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   flush.console()
   
   
-  prsData <- PLSroundingSuppressed(aggData, freqVar, dataSuppressed = supData, roundBase = roundBase)
+  prsData <- PLSroundingSuppressed(aggData, freqVar, dataSuppressed = supData, roundBase = roundBase, allowTotal = allowTotal)
   
   prsData <- prsData[, !(names(prsData) %in% "nCells")]
   

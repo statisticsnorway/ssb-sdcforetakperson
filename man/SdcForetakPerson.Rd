@@ -30,7 +30,8 @@ SdcForetakPerson(
   freqDec = "freqDec*",
   nRep = 3,
   digitsA = 9,
-  digitsB = 5
+  digitsB = 5,
+  allowTotal = TRUE
 )
 }
 \arguments{
@@ -92,6 +93,8 @@ Når, i tillegg, \code{maxN} er \code{NULL} (default), er det mulig å spesifise
 \item{digitsA}{\code{\link{GaussSuppressDec}} parameter (9 er vanligvis ok)}
 
 \item{digitsB}{\code{\link{SuppressionFromDecimals}} parameter (5 er ok når nRep=3)}
+
+\item{allowTotal}{Når TRUE, ingen prikking når alle within-variabler er \code{"Total"}.}
 }
 \value{
 data frame
