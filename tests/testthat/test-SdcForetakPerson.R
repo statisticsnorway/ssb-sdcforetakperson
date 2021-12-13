@@ -14,8 +14,10 @@ z100 <- SdcData("syssel100")
 
 
 test_that("SdcForetakPerson works", {
-  expect_identical(SF(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), nace00="85"),  41193589017) 
-  expect_identical(SF(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6")), 40428997551) 
+  expect_identical(SF(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), nace00="85", allowTotal = FALSE),  41193589017) 
+  expect_identical(SF(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), nace00="85"),  40943387364) 
+  expect_identical(SF(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), allowTotal = FALSE), 40428997551) 
+  expect_identical(SF(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6")), 40194581165)
   expect_identical(SF(z100, between = prikkeVarA, output = "suppressed"), 13515336550) 
   expect_identical(SF(z100, between = prikkeVarA), 5895185552) 
 })
@@ -85,6 +87,17 @@ test_that("SdcForetakPerson med decimal", {
 })
 
 
+test_that("SdcForetakPerson med decimal og allowTotal", {
+  # secondaryZeros is trick to avoid a singleton-method 
+  z100 <- SdcData("syssel100")
+  GD <- SdcForetakPersonDecimalTest
+  expect_true(GD(z, between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = TRUE, secondaryZeros = TRUE))
+  expect_true(GD(z, between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = FALSE, secondaryZeros = TRUE))
+  aT <- SdcForetakPerson(z, between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = TRUE, secondaryZeros = TRUE)
+  aF <- SdcForetakPerson(z, between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = FALSE, secondaryZeros = TRUE)
+  expect_true(all.equal(as.vector(unlist(aF[aF$primary != aT$primary, c("PERS_KJOENN", "alder6")])), rep("Total", 6)))
+  expect_true(sum(aF$suppressed != aT$suppressed) > 0)
+})  
 
 
 
