@@ -31,7 +31,7 @@ SdcForetakPerson(
   nRep = 3,
   digitsA = 9,
   digitsB = 5,
-  allowTotal = TRUE
+  allowTotal = FALSE
 )
 }
 \arguments{
@@ -100,7 +100,8 @@ Når, i tillegg, \code{maxN} er \code{NULL} (default), er det mulig å spesifise
 data frame
 }
 \description{
-Prikking av foretak og avrunding eller prikking av personer
+Prikking av foretak og avrunding eller prikking av personer.
+Sett parameteren \code{allowTotal} til \code{TRUE} for at kategorier innen (\code{within}) foretak skal prikkes samtidig som totalverdier over disse grupperingene tillates publisert.
 }
 \examples{
 

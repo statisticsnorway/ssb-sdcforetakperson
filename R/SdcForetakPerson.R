@@ -1,6 +1,9 @@
 
 
 #' Prikking av foretak og avrunding eller prikking av personer
+#' 
+#' Prikking av foretak og avrunding eller prikking av personer.
+#' Sett parameteren `allowTotal` til `TRUE` for at kategorier innen (`within`) foretak skal prikkes samtidig som totalverdier over disse grupperingene tillates publisert.
 #'
 #' @param data Datasett som data frame 
 #' @param between  Variabler som grupperer foretak for prikking  
@@ -106,7 +109,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             nRep = 3,
                             digitsA = 9,
                             digitsB = 5,
-                            allowTotal = TRUE){
+                            allowTotal = FALSE){
   
   if (is.data.frame(decimal)){
     dataDec <- decimal

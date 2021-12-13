@@ -15,9 +15,9 @@ z100 <- SdcData("syssel100")
 
 test_that("SdcForetakPerson works", {
   expect_identical(SF(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), nace00="85", allowTotal = FALSE),  41193589017) 
-  expect_identical(SF(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), nace00="85"),  40943387364) 
+  expect_identical(SF(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), nace00="85", allowTotal = TRUE),  40943387364) 
   expect_identical(SF(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), allowTotal = FALSE), 40428997551) 
-  expect_identical(SF(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6")), 40194581165)
+  expect_identical(SF(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), allowTotal = TRUE), 40194581165)
   expect_identical(SF(z100, between = prikkeVarA, output = "suppressed"), 13515336550) 
   expect_identical(SF(z100, between = prikkeVarA), 5895185552) 
 })
