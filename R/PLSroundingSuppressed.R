@@ -14,6 +14,7 @@
 #' @param output If not "data.frame" (default), more content in output
 #' @param printPLSrounded When TRUE, output from print \code{\link{PLSrounding}} within the function is printed
 #' @param rndSeed If non-NULL, a random generator seed to be used locally within the function without affecting the random value stream in R. 
+#' @param allowTotal When TRUE, no suppression when other variables are `"Total"`.
 #' @param ... 	 Further parameters sent to \code{\link{PLSrounding}} within the function is printed 
 #'
 #' @return By default, a data frame with aggregates and rounded frequencies with suppression information 
@@ -51,7 +52,8 @@
 #' }
 #' 
 PLSroundingSuppressed = function(data, freqVar, dataSuppressed = NULL, hierarchies = NULL, formula = NULL, numVar = NULL,  
-                                 output = "data.frame", printPLSrounded = FALSE, rndSeed = 123, ...){ #  
+                                 output = "data.frame", printPLSrounded = FALSE, rndSeed = 123,
+                                 allowTotal = FALSE, ...){ #  
   
 
   if (!is.null(rndSeed)) {       # Move to PLSrounding
@@ -79,6 +81,15 @@ PLSroundingSuppressed = function(data, freqVar, dataSuppressed = NULL, hierarchi
   
   if(!is.null(dataSuppressed)){
     ok = is.na(Match(a$crossTable[, names(dataSuppressed), drop=FALSE], dataSuppressed))
+    
+    if(allowTotal){
+      crossTable_B <- a$crossTable[ !ok, !(names(a$crossTable) %in% names(dataSuppressed)), drop=FALSE]
+      if(ncol(crossTable_B) & nrow(crossTable_B)){
+        ok[!ok][rowSums(crossTable_B != "Total") == 0] <- TRUE
+      }
+      rm(crossTable_B)
+    }
+    
   } else {
     ok = rep(TRUE, nrow(a$crossTable))
   }
