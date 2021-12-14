@@ -160,7 +160,7 @@ Primary_FRTK_VIRK_UNIK_sektor_ZerosCanBeTRUE <- function(data, freq, x, maxN, pr
 
 
 
-Primary_FRTK_VIRK_UNIK_sektor <- function(data, freq, x, maxN, protectZeros, num, charVar, sector="sektor", private = "Privat", between = NULL, crossTable,...) {
+Primary_FRTK_VIRK_UNIK_sektor <- function(data, freq, x, maxN, protectZeros, num, charVar, sector="sektor", private = "Privat", between = NULL, crossTable, allowTotal = FALSE, ...) {
   primary <- freq <= maxN
 
   if (anyNA(match(c(sector, "FRTK_VIRK_UNIK"), charVar))) 
@@ -188,9 +188,29 @@ Primary_FRTK_VIRK_UNIK_sektor <- function(data, freq, x, maxN, protectZeros, num
   y <- data[["FRTK_VIRK_UNIK"]]
   y[data[[sector]] != private] <- NA
   nPrivat <- NcontributorsHolding(x, y, holdingInd)
-  primary[nPrivat == 1 & nOff == 0] <- TRUE
-  primary[nPrivat == 1 & nOff == 1] <- TRUE
-  primary[nPrivat == 2 & nOff == 0] <- TRUE
+  
+  
+  primaryB <- rep(FALSE, length(freq)) 
+  
+  primaryB[nPrivat == 1 & nOff == 0] <- TRUE
+  primaryB[nPrivat == 1 & nOff == 1] <- TRUE
+  primaryB[nPrivat == 2 & nOff == 0] <- TRUE
+  
+  if(allowTotal){
+    if(!length(between)){
+      allowTotal <- FALSE
+      warning("allowTotal ignored when no between variables")
+    }
+  }
+  
+  if(allowTotal){
+    crossTable_B <- crossTable[ primaryB, !(names(crossTable) %in% between), drop=FALSE]
+    if(ncol(crossTable_B) & nrow(crossTable_B)){
+      primaryB[primaryB][rowSums(crossTable_B != "Total") == 0] <- FALSE
+    }
+    rm(crossTable_B)
+  } 
+  primary[primaryB] <- TRUE 
   
   if (!protectZeros) 
     primary[freq == 0] <- FALSE   

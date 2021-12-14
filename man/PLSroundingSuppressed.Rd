@@ -14,6 +14,7 @@ PLSroundingSuppressed(
   output = "data.frame",
   printPLSrounded = FALSE,
   rndSeed = 123,
+  allowTotal = FALSE,
   ...
 )
 }
@@ -35,6 +36,8 @@ PLSroundingSuppressed(
 \item{printPLSrounded}{When TRUE, output from print \code{\link{PLSrounding}} within the function is printed}
 
 \item{rndSeed}{If non-NULL, a random generator seed to be used locally within the function without affecting the random value stream in R.}
+
+\item{allowTotal}{When TRUE, no suppression when other variables are \code{"Total"}.}
 
 \item{...}{Further parameters sent to \code{\link{PLSrounding}} within the function is printed}
 }

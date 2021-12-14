@@ -30,7 +30,8 @@ SdcForetakPerson(
   freqDec = "freqDec*",
   nRep = 3,
   digitsA = 9,
-  digitsB = 5
+  digitsB = 5,
+  allowTotal = FALSE
 )
 }
 \arguments{
@@ -92,12 +93,15 @@ Når, i tillegg, \code{maxN} er \code{NULL} (default), er det mulig å spesifise
 \item{digitsA}{\code{\link{GaussSuppressDec}} parameter (9 er vanligvis ok)}
 
 \item{digitsB}{\code{\link{SuppressionFromDecimals}} parameter (5 er ok når nRep=3)}
+
+\item{allowTotal}{Når TRUE, ingen prikking når alle within-variabler er \code{"Total"}.}
 }
 \value{
 data frame
 }
 \description{
-Prikking av foretak og avrunding eller prikking av personer
+Prikking av foretak og avrunding eller prikking av personer.
+Sett parameteren \code{allowTotal} til \code{TRUE} for at kategorier innen (\code{within}) foretak skal prikkes samtidig som totalverdier over disse grupperingene tillates publisert.
 }
 \examples{
 
@@ -119,6 +123,23 @@ z100 <- SdcData("syssel100")
 out <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"))
 head(out)
 tail(out)
+
+# Setter  allowTotal = TRUE
+outT <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), 
+                         allowTotal = TRUE)
+# Rader som har gitt ulik prikking
+rader <- which(is.na(outT$roundedSuppressed) != is.na(out$roundedSuppressed))
+out[rader, ]
+outT[rader, ]
+
+# Ser effekt av allowTotal ved bare prikking
+outP <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), maxN = 1)
+outTP <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), maxN = 1, 
+                          allowTotal = TRUE)
+# Rader som har gitt ulik primærprikking 
+raderP <- which(outTP$primary != outP$primary)
+outP[raderP, ]   # Her ble allikevel prikking til slutt lik (suppressed)
+outTP[raderP, ]  # Dette pga. singleton-håndtering (1-ere som kan avsløres)
 
 
 # Finner data desimaltall med mange variabler som tas hensyn til.  
