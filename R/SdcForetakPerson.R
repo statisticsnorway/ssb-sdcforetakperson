@@ -69,6 +69,23 @@
 #' head(out)
 #' tail(out)
 #' 
+#' # Setter  allowTotal = TRUE
+#' outT <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), 
+#'                          allowTotal = TRUE)
+#' # Rader som har gitt ulik prikking
+#' rader <- which(is.na(outT$roundedSuppressed) != is.na(out$roundedSuppressed))
+#' out[rader, ]
+#' outT[rader, ]
+#' 
+#' # Ser effekt av allowTotal ved bare prikking
+#' outP <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), maxN = 1)
+#' outTP <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), maxN = 1, 
+#'                           allowTotal = TRUE)
+#' # Rader som har gitt ulik primærprikking 
+#' raderP <- which(outTP$primary != outP$primary)
+#' outP[raderP, ]   # Her ble allikevel prikking til slutt lik (suppressed)
+#' outTP[raderP, ]  # Dette pga. singleton-håndtering (1-ere som kan avsløres)
+#' 
 #' 
 #' # Finner data desimaltall med mange variabler som tas hensyn til.  
 #' # Dessverre en warning som kan sees bort fra 
