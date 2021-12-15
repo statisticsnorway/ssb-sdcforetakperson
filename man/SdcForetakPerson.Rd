@@ -31,7 +31,8 @@ SdcForetakPerson(
   nRep = 3,
   digitsA = 9,
   digitsB = 5,
-  allowTotal = FALSE
+  allowTotal = FALSE,
+  til0 = TRUE
 )
 }
 \arguments{
@@ -95,6 +96,9 @@ Når, i tillegg, \code{maxN} er \code{NULL} (default), er det mulig å spesifise
 \item{digitsB}{\code{\link{SuppressionFromDecimals}} parameter (5 er ok når nRep=3)}
 
 \item{allowTotal}{Når TRUE, ingen prikking når alle within-variabler er \code{"Total"}.}
+
+\item{til0}{Når TRUE: Når ikke-prikket tall som følge av \code{allowTotal=TRUE} er avrundet til 0 blir
+prikking av undergrupper av denne opphevet og erstattet med 0.}
 }
 \value{
 data frame

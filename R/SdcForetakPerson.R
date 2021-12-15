@@ -40,6 +40,8 @@
 #' @param digitsA  \code{\link{GaussSuppressDec}} parameter (9 er vanligvis ok)
 #' @param digitsB  \code{\link{SuppressionFromDecimals}} parameter (5 er ok når nRep=3)
 #' @param allowTotal Når TRUE, ingen prikking når alle within-variabler er `"Total"`. 
+#' @param til0 Når TRUE: Når ikke-prikket tall som følge av `allowTotal=TRUE` er avrundet til 0 blir
+#'             prikking av undergrupper av denne opphevet og erstattet med 0.  
 #' 
 #' @return data frame 
 #' @export
@@ -126,7 +128,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             nRep = 3,
                             digitsA = 9,
                             digitsB = 5,
-                            allowTotal = FALSE){
+                            allowTotal = FALSE,
+                            til0 = TRUE){
   
   if (is.data.frame(decimal)){
     dataDec <- decimal
@@ -455,6 +458,16 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   prsData <- PLSroundingSuppressed(aggData, freqVar, dataSuppressed = supData, roundBase = roundBase, allowTotal = allowTotal)
   
   prsData <- prsData[, !(names(prsData) %in% "nCells")]
+  
+  if (allowTotal & til0) {
+    if (!is.null(supData)) {
+      ma <- which(!is.na(Match(prsData[, names(supData), drop = FALSE], supData)))
+      ma1 <- ma[!is.na(prsData$roundedSuppressed[ma])]
+      ma1 <- ma1[prsData$roundedSuppressed[ma1] == 0L]
+      ma2 <- !is.na(Match(prsData[ma, names(supData), drop = FALSE], prsData[ma1, names(supData), drop = FALSE]))
+      prsData$roundedSuppressed[ma[ma2]] <- 0L
+    }
+  }
   
   if(output == "rounded")
     return(prsData)
