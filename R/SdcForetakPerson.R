@@ -179,7 +179,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                         removeZeros = removeZeros, preAggregate = preAggregate, output = output, 
                         decimal = decimal, freqDec = freqDec, 
                         nRep = nRep, digitsA = digitsA, digitsB = digitsB,
-                        allowTotal = allowTotal)) 
+                        allowTotal = allowTotal, til0 = til0)) 
   }
   
   if(class(between)[1] == "formula"){
