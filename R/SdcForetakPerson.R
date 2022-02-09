@@ -266,6 +266,19 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     if(is.null(maxN)){
       if(is.null(dataDec)){
         if(decimal){
+          
+          if(argOutput != "publish"){
+            prikkData   <-    GaussSuppressionFromData(data, dimVar = dimVar_decimal, freqVar = freqVar, 
+                                          formula = formula_decimal,
+                                          charVar = c(sector, "FRTK_VIRK_UNIK"), 
+                                          weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
+                                          secondaryZeros = secondaryZeros,
+                                          primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
+                                          singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
+                                          sector = sector, private = private, #output = "publish_inner",
+                                          output = argOutput)
+            return(prikkData)
+          }
           a <-         GaussSuppressDec(data, dimVar = dimVar_decimal, freqVar = freqVar, 
                                         formula = formula_decimal,
                                                 charVar = c(sector, "FRTK_VIRK_UNIK"), 
