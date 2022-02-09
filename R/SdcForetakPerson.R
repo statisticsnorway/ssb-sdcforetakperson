@@ -131,6 +131,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             allowTotal = FALSE,
                             til0 = TRUE){
   
+  argOutput <- get0("GaussSuppressionFromData_argOutput", ifnotfound = "publish") # special input for testing from global environment
+  
   if (is.data.frame(decimal)){
     dataDec <- decimal
     decimal <- FALSE
@@ -295,7 +297,11 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                                 secondaryZeros = secondaryZeros,
                                                 primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
                                                 singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
-                                                sector = sector, private = private)
+                                                sector = sector, private = private, 
+                                                output = argOutput)
+          if(argOutput != "publish"){
+            return(prikkData)
+          }
         }
         
         if(output == "suppressed"){
