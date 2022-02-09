@@ -42,6 +42,7 @@
 #' @param allowTotal Når TRUE, ingen prikking når alle within-variabler er `"Total"`. 
 #' @param til0 Når TRUE: Når ikke-prikket tall som følge av `allowTotal=TRUE` er avrundet til 0 blir
 #'             prikking av undergrupper av denne opphevet og erstattet med 0.  
+#' @param iWait Minimum antall sekunder mellom hver gang det skrives ut ekstra informasjon fra prikkerutinen.    
 #' 
 #' @return data frame 
 #' @export
@@ -129,7 +130,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             digitsA = 9,
                             digitsB = 5,
                             allowTotal = FALSE,
-                            til0 = TRUE){
+                            til0 = TRUE,
+                            iWait = Inf){
   
   argOutput <- get0("GaussSuppressionFromData_argOutput", ifnotfound = "publish") # special input for testing from global environment
   
@@ -181,7 +183,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                         removeZeros = removeZeros, preAggregate = preAggregate, output = output, 
                         decimal = decimal, freqDec = freqDec, 
                         nRep = nRep, digitsA = digitsA, digitsB = digitsB,
-                        allowTotal = allowTotal, til0 = til0)) 
+                        allowTotal = allowTotal, til0 = til0, iWait = iWait)) 
   }
   
   if(class(between)[1] == "formula"){
@@ -276,7 +278,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                           primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
                                           singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
                                           sector = sector, private = private, #output = "publish_inner",
-                                          output = argOutput)
+                                          output = argOutput, 
+                                          iWait = iWait)
             return(prikkData)
           }
           a <-         GaussSuppressDec(data, dimVar = dimVar_decimal, freqVar = freqVar, 
@@ -288,7 +291,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                                 singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
                                                 sector = sector, private = private, #output = "publish_inner",
                                         output = ifelse(is.null(formula_decimal), "publish_inner", "inner"),
-                                                nRep = nRep, digits = digitsA,  mismatchWarning = digitsB)
+                                                nRep = nRep, digits = digitsA,  mismatchWarning = digitsB, 
+                                        iWait = iWait)
           
           if(!is.null(formula_decimal)){
             names(a)[names(a) == freqVar] <- "freq"
@@ -311,7 +315,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                                 primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
                                                 singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
                                                 sector = sector, private = private, 
-                                                output = argOutput)
+                                                output = argOutput, 
+                                                iWait = iWait)
           if(argOutput != "publish"){
             return(prikkData)
           }
@@ -376,14 +381,16 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                               sector = sector, private = private, between = between,
                                               nRep = nRep, digits = digitsA,  mismatchWarning = digitsB, 
                                               singletonMethod = singletonMethod, output = "publish_inner",
-                                              allowTotal = allowTotal)
+                                              allowTotal = allowTotal, 
+                                              iWait = iWait)
       } else {
         a <- GaussSuppressDec(data, dimVar = alleVar, freqVar = freqVar, 
                                               protectZeros = protectZeros, maxN = maxN, 
                                               secondaryZeros = secondaryZeros,
                                               preAggregate = preAggregate,
                                               nRep = nRep, digits = digitsA,  mismatchWarning = digitsB,
-                                              singletonMethod = singletonMethod, output = "publish_inner")
+                                              singletonMethod = singletonMethod, output = "publish_inner", 
+                                              iWait = iWait)
       }
       
       between <- alleVar # endrer siden delvis gjenbruk av kode 
@@ -409,13 +416,15 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                               preAggregate = preAggregate,
                                               sector = sector, private = private, between = between,
                                               singletonMethod = singletonMethod,
-                                              allowTotal = allowTotal)
+                                              allowTotal = allowTotal, 
+                                              iWait = iWait)
       } else {
         prikkData <- GaussSuppressionFromData(data, dimVar = alleVar, freqVar = freqVar, 
                                               protectZeros = protectZeros, maxN = maxN, 
                                               secondaryZeros = secondaryZeros,
                                               preAggregate = preAggregate,
-                                              singletonMethod = singletonMethod)
+                                              singletonMethod = singletonMethod,
+                                              iWait = iWait)
       }
     } else {
       

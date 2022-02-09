@@ -32,7 +32,8 @@ SdcForetakPerson(
   digitsA = 9,
   digitsB = 5,
   allowTotal = FALSE,
-  til0 = TRUE
+  til0 = TRUE,
+  iWait = Inf
 )
 }
 \arguments{
@@ -99,6 +100,8 @@ Når, i tillegg, \code{maxN} er \code{NULL} (default), er det mulig å spesifise
 
 \item{til0}{Når TRUE: Når ikke-prikket tall som følge av \code{allowTotal=TRUE} er avrundet til 0 blir
 prikking av undergrupper av denne opphevet og erstattet med 0.}
+
+\item{iWait}{Minimum antall sekunder mellom hver gang det skrives ut ekstra informasjon fra prikkerutinen.}
 }
 \value{
 data frame
