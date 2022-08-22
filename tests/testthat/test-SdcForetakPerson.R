@@ -25,7 +25,8 @@ test_that("SdcForetakPerson works", {
 })
 
 z <- Make_FRTK_VIRK_UNIK_AggVar(z100, varnames = c("FRTK_VIRK_UNIK", NA, NA, NA, NA, NA, NA))
-z$narWeight = SdcForetakPerson:::Make_NarWeight_00(z, "nar8", "85")
+# z$narWeight = SdcForetakPerson:::Make_NarWeight_00(z, "nar8", "85")
+z$weight = SdcForetakPerson:::Make_NarWeight_00(z, "nar8", "85")
 
 z$ArbForhold = 1
 z$Lonnstaker <- c(1,1,0,1,1)
@@ -34,8 +35,9 @@ z$Lonnstaker <- c(1,1,0,1,1)
 test_that("KOde for ArbForhold og Lonnstaker", {
   GF = function(...) SF(..., Fun = Suppression578)
   # Funksjon som på mail, men med flere input-parametere 
-  Suppression578 <- function(data, dimVar, freqVar,  weightVar = "narWeight", protectZeros = FALSE, maxN = 2) {
-    prikk <- GaussSuppression::GaussSuppressionFromData(data = data, dimVar = dimVar, freqVar = freqVar, 
+  Suppression578 <- function(data, dimVar, freqVar,  weightVar = "weight", protectZeros = FALSE, maxN = 2) {   # weightVar = "narWeight"
+    data[["freq"]] <- data[[freqVar]] 
+    prikk <- GaussSuppression::GaussSuppressionFromData(data = data, dimVar = dimVar, freqVar = "freq", 
                                       charVar = c("sektor", "FRTK_VIRK_UNIK"), weightVar = weightVar, protectZeros = protectZeros, 
                                       maxN = maxN, primary = SdcForetakPerson:::Primary_FRTK_VIRK_UNIK_sektor, preAggregate = TRUE)
     
@@ -63,12 +65,11 @@ test_that("KOde for ArbForhold og Lonnstaker", {
 test_that("Med ren GaussSuppressionFromData", {
   GD = function(...) SF(..., Fun = GaussSuppression::GaussSuppressionFromData)
   
-  expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = FALSE, maxN = 2), 13042550120)
-  expect_identical(suppressWarnings(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = TRUE, maxN = 2)), 12106514632)
+  expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "weight", protectZeros = FALSE, maxN = 2), 13042550120)
+  expect_identical(suppressWarnings(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "weight", protectZeros = TRUE, maxN = 2)), 12106514632)
   expect_identical(suppressWarnings(GD(z, prikkeVarA, "Lonnstaker", protectZeros = TRUE, maxN = 5)), 11744811938)
-  expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = FALSE, maxN = 2, singleton = NULL), 13418947051)
-  expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "narWeight", protectZeros = FALSE, maxN = 2, singletonMethod = "none"), 13418947051)
-  
+  expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "weight", protectZeros = FALSE, maxN = 2, singleton = NULL), 13418947051)
+  expect_identical(GD(z, prikkeVarA, "Lonnstaker",   weightVar = "weight", protectZeros = FALSE, maxN = 2, singletonMethod = "none"), 13418947051)
 })
 
 
