@@ -13,7 +13,7 @@
 #' @param maxN Max-verdi for primærprikking av personer.  Ikke-NULL verdi betyr prikking istedenfor avrunding. 
 #' @param protectZeros Suppression parameter. Empty cells (count=0) are set as primary suppressed When TRUE.  
 #' @param secondaryZeros Suppression parameter.
-#' @param freqVar A single variable holding counts (name or number) or NULL in the case of micro data  
+#' @param freqVar A single variable holding counts (name or number) or NULL in the case of micro data (then variable named `"freq"` will be generated )  
 #' @param sector Sektor-variabel som inneholder Privat-koden (se parameter \code{"private"}). 
 #' @param private Privat-koden
 #' @param nace between-variabel med nace-kode eller koding (starter med) som leter etter slik variabel (`nace` kan settes til `NULL`) 
@@ -216,8 +216,13 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   
   
   if(is.null(freqVar)){
-    freqVar <- "sySseLsaTte" # Kun variabelnavn som brukes internt
-    data$sySseLsaTte <- 1L
+    # freqVar <- "sySseLsaTte" # Kun variabelnavn som brukes internt
+    # data$sySseLsaTte <- 1L
+    if ("freq" %in% names(data)) {
+      warning("'freq' is set to 1's. 'freq' existing in data is not used")
+    }
+    freqVar <- "freq"
+    data$freq <- 1L
   }
   
   
@@ -295,7 +300,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                         iWait = iWait)
           
           if(!is.null(formula_decimal)){
-            names(a)[names(a) == freqVar] <- "freq"
+            # names(a)[names(a) == freqVar] <- "freq"
             return(a[names(a) != "narWeight"])
           }
           
@@ -349,7 +354,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
         if(!length(freqDecNames)){
           stop("Ingen freqDec-variabelnavn funnet")
         }
-        prikkData <- SuppressionFromDecimals(dataDec, dimVar = between , freqVar = "freq", 
+        prikkData <- SuppressionFromDecimals(dataDec, dimVar = between , freqVar = freqVar, #freqVar = "freq", 
                                               decVar = freqDecNames, preAggregate = preAggregate, digits = digitsB)
         if(output == "suppressed"){
           prikkData$prikk <- as.integer(prikkData$suppressed)
@@ -449,7 +454,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
       if(!length(freqDecNames)){
         stop("Ingen freqDec-variabelnavn funnet")
       }
-      prikkData <- SuppressionFromDecimals(dataDec, dimVar = between, freqVar = "freq", 
+      prikkData <- SuppressionFromDecimals(dataDec, dimVar = between, freqVar = freqVar, # freqVar = "freq", 
                                            decVar = freqDecNames, preAggregate = preAggregate, digits = digitsB)
       prikkData <- prikkData[!(names(prikkData) %in% c(freqDecNames, "primary"))] 
       

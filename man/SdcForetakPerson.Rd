@@ -53,7 +53,7 @@ SdcForetakPerson(
 
 \item{secondaryZeros}{Suppression parameter.}
 
-\item{freqVar}{A single variable holding counts (name or number) or NULL in the case of micro data}
+\item{freqVar}{A single variable holding counts (name or number) or NULL in the case of micro data (then variable named \code{"freq"} will be generated )}
 
 \item{sector}{Sektor-variabel som inneholder Privat-koden (se parameter \code{"private"}).}
 
