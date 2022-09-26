@@ -307,7 +307,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
           dimVarOut <- between[between %in% names(a$publish)]
           ma <- Match(a$publish[dimVarOut], a$inner[dimVarOut])
           prikkData <- cbind(a$inner[ma[!is.na(ma)], between, drop = FALSE], 
-                             a$publish[!is.na(ma), !(names(a$publish) %in% c(between, "weight", "primary")), drop = FALSE])
+                             a$publish[!is.na(ma), !(names(a$publish) %in% c(between, "narWeight", "primary")), drop = FALSE])
           names(prikkData)[names(prikkData) == "suppressed"] <- "prikk"
           prikkData$prikk <- as.integer(prikkData$prikk)
           rownames(prikkData) <- NULL
@@ -403,7 +403,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
       dimVarOut <- between[between %in% names(a$publish)]
       ma <- Match(a$publish[dimVarOut], a$inner[dimVarOut])
       prikkData <- cbind(a$inner[ma[!is.na(ma)], between, drop = FALSE], 
-                         a$publish[!is.na(ma), !(names(a$publish) %in% c(between, "weight", "primary")), drop = FALSE])
+                         a$publish[!is.na(ma), !(names(a$publish) %in% c(between, "narWeight", "primary")), drop = FALSE])
       names(prikkData)[names(prikkData) == "suppressed"] <- "prikk"
       prikkData$prikk <- as.integer(prikkData$prikk)
       rownames(prikkData) <- NULL
@@ -469,8 +469,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
       prikkData$primary <- as.integer(prikkData$primary)
     prikkData$suppressed <- as.integer(prikkData$suppressed)
     # Tar bort weight og inn med prikket på samme plass
-    names(prikkData)[names(prikkData) == "weight"] <- "prikket"
-    prikkData$prikket <- prikkData$freq
+    names(prikkData)[names(prikkData) == "narWeight"] <- "prikket"
+    prikkData$prikket <- prikkData[[freqVar]]  # prikkData$freq
     prikkData$prikket[prikkData$suppressed==1] <- NA
     
     

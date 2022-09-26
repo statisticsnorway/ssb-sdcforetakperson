@@ -58,6 +58,21 @@ test_that("KOde for ArbForhold og Lonnstaker", {
   expect_identical(GF(z, prikkeVarB , "Lonnstaker", maxN = 5), 343533630)
   expect_identical(GF(z, prikkeVarB , "ArbForhold", maxN = -1, weightVar =NULL), 343693162)
   expect_identical(suppressWarnings(GF(z, prikkeVarB , "ArbForhold", maxN = 5, protectZeros =TRUE)), 343701795)
+  
+  
+  
+  #
+  # Testkoden over er skrevet svært tidlig før dette ble i implementert i  SdcForetakPerson.
+  # Nye tester under. Merk parameter removeZeros. 
+  #
+  expect_identical(SF(z, between = prikkeVarB , freqVar = "ArbForhold", nace00 = "85",  nace00primary = TRUE, maxN = -1), 343700515)
+  expect_identical(SF(z, between = prikkeVarB , freqVar = "ArbForhold", nace00 = "85",  nace00primary = TRUE, maxN = 5), 343710393)
+  expect_identical(SF(z, between = prikkeVarB , freqVar = "Lonnstaker", nace00 = "85",  nace00primary = TRUE, removeZeros = FALSE, maxN = -1), 343527078)
+  expect_identical(SF(z, between = prikkeVarB , freqVar = "Lonnstaker", nace00 = "85",  nace00primary = TRUE, removeZeros = FALSE, maxN = 5), 343533630)
+  expect_identical(SF(z, between = prikkeVarB , freqVar = "ArbForhold", removeZeros = FALSE, maxN = -1), 343710178)
+  expect_identical(suppressWarnings(SF(z, between = prikkeVarB , freqVar = "ArbForhold", nace00 = "85",  nace00primary = TRUE, maxN = 5, protectZeros =TRUE)), 343701795)
+ 
+  
 })
 
 
