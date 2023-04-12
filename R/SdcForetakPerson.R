@@ -234,33 +234,33 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   if(length(between )>0){
     
     if(is.null(dataDec)){
-    
-    CheckInput(sector,  type = "varNrName", data = data, okNULL = TRUE)
-    CheckInput(frtk,  type = "varNrName", data = data, okNULL = TRUE)
-    CheckInput(virk,  type = "varNrName", data = data, okNULL = TRUE)
-    if(!makeunik) CheckInput(unik,  type = "varNrName", data = data, okNULL = TRUE)
-    
-    
-    data <- Make_FRTK_VIRK_UNIK_AggVar(data, frtk=frtk, virk=virk, unik =unik, varnames = c("FRTK_VIRK_UNIK", NA, NA, NA, NA, NA, NA))
-    
-    if (!is.null(nace)) {
-      if(length(nace)){
-        nace <- WildcardGlobbingVector(names(data[1, between, drop=FALSE]), nace)
-        if(length(nace)==0){
-          warning("Ingen nace-variabel funnet")
-        }
-        if(length(nace)>1){
-          stop("nace-variabel ikke unikt spesifisert")
+      
+      CheckInput(sector,  type = "varNrName", data = data, okNULL = TRUE)
+      CheckInput(frtk,  type = "varNrName", data = data, okNULL = TRUE)
+      CheckInput(virk,  type = "varNrName", data = data, okNULL = TRUE)
+      if(!makeunik) CheckInput(unik,  type = "varNrName", data = data, okNULL = TRUE)
+      
+      
+      data <- Make_FRTK_VIRK_UNIK_AggVar(data, frtk=frtk, virk=virk, unik =unik, varnames = c("FRTK_VIRK_UNIK", NA, NA, NA, NA, NA, NA))
+      
+      if (!is.null(nace)) {
+        if(length(nace)){
+          nace <- WildcardGlobbingVector(names(data[1, between, drop=FALSE]), nace)
+          if(length(nace)==0){
+            warning("Ingen nace-variabel funnet")
+          }
+          if(length(nace)>1){
+            stop("nace-variabel ikke unikt spesifisert")
+          }
         }
       }
-    }
-    
-    if(length(nace)==0){
-      nace = NULL
-    }
-    
-    Primary_FRTK_VIRK_UNIK_sektor_here <- Primary_FRTK_VIRK_UNIK_sektor
-    
+      
+      if(length(nace)==0){
+        nace = NULL
+      }
+      
+      Primary_FRTK_VIRK_UNIK_sektor_here <- Primary_FRTK_VIRK_UNIK_sektor
+      
     }
     
     if(is.null(dataDec)){
