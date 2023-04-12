@@ -31,6 +31,9 @@ z$weight = SdcForetakPerson:::Make_NarWeight_00(z, "nar8", "85")
 z$ArbForhold = 1
 z$Lonnstaker <- c(1,1,0,1,1)
 
+z2 <- z
+names(z2)[7:13] <- tolower(names(z2)[7:13])
+
 
 test_that("KOde for ArbForhold og Lonnstaker", {
   GF = function(...) SF(..., Fun = Suppression578)
@@ -92,12 +95,12 @@ test_that("SdcForetakPerson med decimal", {
 
   GD <- SdcForetakPersonDecimalTest
   expect_true(GD(z, z[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE, maxN = 2))
-  expect_true(GD(z, z[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE, maxN = 2))
+  expect_true(GD(z2, z2[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE, maxN = 2))
   expect_true(GD(z, z[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE, maxN = 5))
   
   expect_true(GD(z, z[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE))
   expect_true(GD(z, z[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE))
-  expect_true(GD(z, z[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE))
+  expect_true(GD(z2, z2[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE))
   
   expect_true(GD(z100, z100[1:6], between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), nace00="85")) 
   expect_true(GD(z100, z100[1:6], between = prikkeVarB, within = c("PERS_KJOENN", "alder6"))) 
@@ -112,7 +115,7 @@ test_that("SdcForetakPerson med decimal og allowTotal", {
   expect_true(GD(z, z[1:6], between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = TRUE, secondaryZeros = TRUE))
   expect_true(GD(z, z[1:6], between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = FALSE, secondaryZeros = TRUE))
   aT <- SdcForetakPerson(z, between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = TRUE, secondaryZeros = TRUE)
-  aF <- SdcForetakPerson(z, between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = FALSE, secondaryZeros = TRUE)
+  aF <- SdcForetakPerson(z2, between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = FALSE, secondaryZeros = TRUE)
   expect_true(all.equal(as.vector(unlist(aF[aF$primary != aT$primary, c("PERS_KJOENN", "alder6")])), rep("Total", 6)))
   expect_true(sum(aF$suppressed != aT$suppressed) > 0)
 })  
