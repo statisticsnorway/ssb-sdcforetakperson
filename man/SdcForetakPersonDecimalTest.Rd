@@ -4,9 +4,13 @@
 \alias{SdcForetakPersonDecimalTest}
 \title{Test av SdcForetakPerson med decimal}
 \usage{
-SdcForetakPersonDecimalTest(..., stopWhenFALSE = TRUE)
+SdcForetakPersonDecimalTest(data, data2, ..., stopWhenFALSE = TRUE)
 }
 \arguments{
+\item{data}{vanlige data}
+
+\item{data2}{data brukt når decimal er input (noen variabler kan fjernes)}
+
 \item{...}{SdcForetakPerson-parametere}
 
 \item{stopWhenFALSE}{Feiler ved FALSE når TRUE}

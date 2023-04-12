@@ -91,16 +91,16 @@ test_that("Med ren GaussSuppressionFromData", {
 test_that("SdcForetakPerson med decimal", {
 
   GD <- SdcForetakPersonDecimalTest
-  expect_true(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE, maxN = 2))
-  expect_true(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE, maxN = 2))
-  expect_true(GD(z, prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE, maxN = 5))
+  expect_true(GD(z, z[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE, maxN = 2))
+  expect_true(GD(z, z[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE, maxN = 2))
+  expect_true(GD(z, z[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE, maxN = 5))
   
-  expect_true(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE))
-  expect_true(GD(z, prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE))
-  expect_true(GD(z, prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE))
+  expect_true(GD(z, z[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = FALSE))
+  expect_true(GD(z, z[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", nace00 = "85", protectZeros = TRUE))
+  expect_true(GD(z, z[c(1:7, 15)], prikkeVarA, freqVar = "Lonnstaker", protectZeros = FALSE))
   
-  expect_true(GD(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), nace00="85")) 
-  expect_true(GD(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"))) 
+  expect_true(GD(z100, z100[1:6], between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), nace00="85")) 
+  expect_true(GD(z100, z100[1:6], between = prikkeVarB, within = c("PERS_KJOENN", "alder6"))) 
 
 })
 
@@ -109,8 +109,8 @@ test_that("SdcForetakPerson med decimal og allowTotal", {
   # secondaryZeros is trick to avoid a singleton-method 
   z100 <- SdcData("syssel100")
   GD <- SdcForetakPersonDecimalTest
-  expect_true(GD(z, between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = TRUE, secondaryZeros = TRUE))
-  expect_true(GD(z, between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = FALSE, secondaryZeros = TRUE))
+  expect_true(GD(z, z[1:6], between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = TRUE, secondaryZeros = TRUE))
+  expect_true(GD(z, z[1:6], between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = FALSE, secondaryZeros = TRUE))
   aT <- SdcForetakPerson(z, between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = TRUE, secondaryZeros = TRUE)
   aF <- SdcForetakPerson(z, between = prikkeVarB, maxN = -1, within = c("PERS_KJOENN", "alder6"), allowTotal = FALSE, secondaryZeros = TRUE)
   expect_true(all.equal(as.vector(unlist(aF[aF$primary != aT$primary, c("PERS_KJOENN", "alder6")])), rep("Total", 6)))
