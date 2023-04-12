@@ -16,7 +16,7 @@
 #' @examples
 #' prikkeVarA <- c("arb_fylke", "ARB_ARBKOMM", "nar8", "sektor")
 #' z <- SdcData("syssel27")
-#' SdcForetakPersonDecimalTest(z, between = prikkeVarA)
+#' SdcForetakPersonDecimalTest(z, z[1:7], between = prikkeVarA)
 SdcForetakPersonDecimalTest <- function(data, data2, ..., stopWhenFALSE = TRUE) {
   a <- SdcForetakPerson(data, ...)
   d <- SdcForetakPerson(data, ..., decimal = TRUE)

@@ -24,6 +24,6 @@ Om det blir samme svar via \code{decimal = TRUE}
 \examples{
 prikkeVarA <- c("arb_fylke", "ARB_ARBKOMM", "nar8", "sektor")
 z <- SdcData("syssel27")
-SdcForetakPersonDecimalTest(z, between = prikkeVarA)
+SdcForetakPersonDecimalTest(z, z[1:7], between = prikkeVarA)
 }
 \keyword{internal}
