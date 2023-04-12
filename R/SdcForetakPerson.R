@@ -233,6 +233,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   
   if(length(between )>0){
     
+    if(is.null(dataDec)){
+    
     CheckInput(sector,  type = "varNrName", data = data, okNULL = TRUE)
     CheckInput(frtk,  type = "varNrName", data = data, okNULL = TRUE)
     CheckInput(virk,  type = "varNrName", data = data, okNULL = TRUE)
@@ -258,6 +260,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     }
     
     Primary_FRTK_VIRK_UNIK_sektor_here <- Primary_FRTK_VIRK_UNIK_sektor
+    
+    }
     
     if(is.null(dataDec)){
       if (!is.null(nace)) {
