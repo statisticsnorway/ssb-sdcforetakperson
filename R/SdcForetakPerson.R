@@ -4,6 +4,11 @@
 #' 
 #' Prikking av foretak og avrunding eller prikking av personer.
 #' Sett parameteren `allowTotal` til `TRUE` for at kategorier innen (`within`) foretak skal prikkes samtidig som totalverdier over disse grupperingene tillates publisert.
+#' 
+#' Default parameterverdier der funksjonen \code{\link{lower_match}} brukes betyr at default er første variabelnavn i `data` 
+#' som matcher når det ikke tas hensyn til små eller store bokstaver. Dette betyr, for eksempel, at parameteren `frtk` 
+#' ikke må bli spesifisert av brukeren hvis variabelnavnet i inputdata er `"frtk_id_ssb"` eller `"FRTK_ID_SSB"`. 
+#' Det kan også være `"frtk_id_SSB"` om man vil.   
 #'
 #' @param data Datasett som data frame 
 #' @param between  Variabler som grupperer foretak for prikking  
@@ -117,11 +122,13 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             protectZeros = FALSE, 
                             secondaryZeros = FALSE,
                             freqVar = NULL,
-                            sector = "sektor",
+                            sector = lower_match(data, "sektor"),
                             private = "Privat",
                             nace = c("nar*", "NACE*", "nace*"), nace00="00",
                             nace00primary = FALSE,
-                            frtk="FRTK_ID_SSB", virk="VIRK_ID_SSB", unik = "UNIK_ID", 
+                            frtk = lower_match(data, "frtk_id_ssb"), 
+                            virk = lower_match(data, "virk_id_ssb"), 
+                            unik = lower_match(data, "unik_id"), 
                             makeunik = TRUE, removeZeros = !protectZeros, preAggregate = TRUE,
                             output = NULL,
                             decimal = FALSE, 
@@ -233,31 +240,35 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   
   if(length(between )>0){
     
-    CheckInput(sector,  type = "varNrName", data = data, okNULL = TRUE)
-    CheckInput(frtk,  type = "varNrName", data = data, okNULL = TRUE)
-    CheckInput(virk,  type = "varNrName", data = data, okNULL = TRUE)
-    if(!makeunik) CheckInput(unik,  type = "varNrName", data = data, okNULL = TRUE)
-    
-    
-    data <- Make_FRTK_VIRK_UNIK_AggVar(data, frtk=frtk, virk=virk, unik =unik, varnames = c("FRTK_VIRK_UNIK", NA, NA, NA, NA, NA, NA))
-    
-    if (!is.null(nace)) {
-      if(length(nace)){
-        nace <- WildcardGlobbingVector(names(data[1, between, drop=FALSE]), nace)
-        if(length(nace)==0){
-          warning("Ingen nace-variabel funnet")
-        }
-        if(length(nace)>1){
-          stop("nace-variabel ikke unikt spesifisert")
+    if(is.null(dataDec)){
+      
+      CheckInput(sector,  type = "varNrName", data = data, okNULL = TRUE)
+      CheckInput(frtk,  type = "varNrName", data = data, okNULL = TRUE)
+      CheckInput(virk,  type = "varNrName", data = data, okNULL = TRUE)
+      if(!makeunik) CheckInput(unik,  type = "varNrName", data = data, okNULL = TRUE)
+      
+      
+      data <- Make_FRTK_VIRK_UNIK_AggVar(data, frtk=frtk, virk=virk, unik =unik, varnames = c("FRTK_VIRK_UNIK", NA, NA, NA, NA, NA, NA))
+      
+      if (!is.null(nace)) {
+        if(length(nace)){
+          nace <- WildcardGlobbingVector(names(data[1, between, drop=FALSE]), nace)
+          if(length(nace)==0){
+            warning("Ingen nace-variabel funnet")
+          }
+          if(length(nace)>1){
+            stop("nace-variabel ikke unikt spesifisert")
+          }
         }
       }
+      
+      if(length(nace)==0){
+        nace = NULL
+      }
+      
+      Primary_FRTK_VIRK_UNIK_sektor_here <- Primary_FRTK_VIRK_UNIK_sektor
+      
     }
-    
-    if(length(nace)==0){
-      nace = NULL
-    }
-    
-    Primary_FRTK_VIRK_UNIK_sektor_here <- Primary_FRTK_VIRK_UNIK_sektor
     
     if(is.null(dataDec)){
       if (!is.null(nace)) {

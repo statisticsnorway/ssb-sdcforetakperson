@@ -4,9 +4,13 @@
 \alias{SdcForetakPersonDecimalTest}
 \title{Test av SdcForetakPerson med decimal}
 \usage{
-SdcForetakPersonDecimalTest(..., stopWhenFALSE = TRUE)
+SdcForetakPersonDecimalTest(data, data2, ..., stopWhenFALSE = TRUE)
 }
 \arguments{
+\item{data}{vanlige data}
+
+\item{data2}{data brukt når decimal er input (noen variabler kan fjernes)}
+
 \item{...}{SdcForetakPerson-parametere}
 
 \item{stopWhenFALSE}{Feiler ved FALSE når TRUE}
@@ -20,6 +24,6 @@ Om det blir samme svar via \code{decimal = TRUE}
 \examples{
 prikkeVarA <- c("arb_fylke", "ARB_ARBKOMM", "nar8", "sektor")
 z <- SdcData("syssel27")
-SdcForetakPersonDecimalTest(z, between = prikkeVarA)
+SdcForetakPersonDecimalTest(z, z[1:7], between = prikkeVarA)
 }
 \keyword{internal}
