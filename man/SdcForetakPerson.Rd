@@ -146,6 +146,11 @@ out <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "a
 head(out)
 tail(out)
 
+# Bruke av dominansregler
+outD <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), 
+                         k1 = 40, k2 = 50, output = "suppressed")
+outD                        
+
 # Setter  allowTotal = TRUE
 outT <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), 
                          allowTotal = TRUE)

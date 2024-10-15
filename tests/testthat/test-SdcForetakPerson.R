@@ -24,6 +24,15 @@ test_that("SdcForetakPerson works", {
   expect_identical(SF(z100, between = prikkeVarA), 5895185552) 
 })
 
+test_that("Dominansregler", {
+  out <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), output = "suppressed", k1 = 45)
+  expect_identical(sum(out$primary), 4L)
+  out <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), output = "suppressed", k1 = 26, k2 = 36)
+  expect_identical(sum(out$primary), 10L)
+  out <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), output = "suppressed", pPercent = 55)
+  expect_identical(sum(out$primary), 5L)
+})
+
 z <- Make_FRTK_VIRK_UNIK_AggVar(z100, varnames = c("FRTK_VIRK_UNIK", NA, NA, NA, NA, NA, NA))
 # z$narWeight = SdcForetakPerson:::Make_NarWeight_00(z, "nar8", "85")
 z$weight = SdcForetakPerson:::Make_NarWeight_00(z, "nar8", "85")
