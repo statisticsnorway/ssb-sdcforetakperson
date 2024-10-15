@@ -48,10 +48,13 @@
 #' @param til0 Når TRUE: Når ikke-prikket tall som følge av `allowTotal=TRUE` er avrundet til 0 blir
 #'             prikking av undergrupper av denne opphevet og erstattet med 0.  
 #' @param iWait Minimum antall sekunder mellom hver gang det skrives ut ekstra informasjon fra prikkerutinen.    
+#' @param k1 Parameter for dominansregel. Primærprikking når ett privat foretak har mer enn k1% av antall personer i den aktuelle tabellcellen.
+#' @param k2 Parameter for dominansregel. Primærprikking når to private foretak har mer enn k2% av antall personer i den aktuelle tabellcellen.
+#' @param pPercent Parameter for p%-regel som er alternativ til dominansregel. Dersom denne spesifiseres, ignoreres k1 og k2. 
 #' 
 #' @return data frame 
 #' @export
-#' @importFrom GaussSuppression GaussSuppressionFromData NcontributorsHolding Ncontributors GaussSuppressDec SuppressionFromDecimals
+#' @importFrom GaussSuppression GaussSuppressionFromData NcontributorsHolding Ncontributors GaussSuppressDec SuppressionFromDecimals MaxContribution
 #' @importFrom SSBtools WildcardGlobbingVector SortRows RowGroups Match
 #' @importFrom methods hasArg
 #' @importFrom stats aggregate delete.response formula terms
@@ -138,7 +141,10 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             digitsB = 5,
                             allowTotal = FALSE,
                             til0 = TRUE,
-                            iWait = Inf){
+                            iWait = Inf, 
+                            k1 = NULL,
+                            k2 = 2*k1,
+                            pPercent = NULL){
   
   argOutput <- get0("GaussSuppressionFromData_argOutput", ifnotfound = "publish") # special input for testing from global environment
   
@@ -190,7 +196,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                         removeZeros = removeZeros, preAggregate = preAggregate, output = output, 
                         decimal = decimal, freqDec = freqDec, 
                         nRep = nRep, digitsA = digitsA, digitsB = digitsB,
-                        allowTotal = allowTotal, til0 = til0, iWait = iWait)) 
+                        allowTotal = allowTotal, til0 = til0, iWait = iWait,
+                        k1 = k1, k2 = k2, pPercent =  pPercent)) 
   }
   
   if(class(between)[1] == "formula"){
@@ -266,7 +273,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
         nace = NULL
       }
       
-      Primary_FRTK_VIRK_UNIK_sektor_here <- Primary_FRTK_VIRK_UNIK_sektor
+      Primary_FRTK_VIRK_UNIK_sektor_here <- Primary_FRTK_VIRK_UNIK_sektor_dominance 
       
     }
     
@@ -274,7 +281,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
       if (!is.null(nace)) {
         data$narWeight <- Make_NarWeight_00(data, nace, nace00)
         if(!nace00primary){
-          Primary_FRTK_VIRK_UNIK_sektor_here <- c(Primary_FRTK_VIRK_UNIK_sektor, Primary_NA_when_weight_is_0)
+          Primary_FRTK_VIRK_UNIK_sektor_here <- c(Primary_FRTK_VIRK_UNIK_sektor_dominance, Primary_NA_when_weight_is_0)
         }
       } else {
         data$narWeight <- 1L
@@ -295,7 +302,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                           singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
                                           sector = sector, private = private, #output = "publish_inner",
                                           output = argOutput, 
-                                          iWait = iWait)
+                                          iWait = iWait, 
+                                          k1 = k1, k2 = k2, pPercent =  pPercent)
             return(prikkData)
           }
           a <-         GaussSuppressDec(data, dimVar = dimVar_decimal, freqVar = freqVar, 
@@ -308,7 +316,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                                 sector = sector, private = private, #output = "publish_inner",
                                         output = ifelse(is.null(formula_decimal), "publish_inner", "inner"),
                                                 nRep = nRep, digits = digitsA,  mismatchWarning = digitsB, 
-                                        iWait = iWait)
+                                        iWait = iWait,
+                                        k1 = k1, k2 = k2, pPercent =  pPercent)
           
           if(!is.null(formula_decimal)){
             # names(a)[names(a) == freqVar] <- "freq"
@@ -332,7 +341,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                                 singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
                                                 sector = sector, private = private, 
                                                 output = argOutput, 
-                                                iWait = iWait)
+                                                iWait = iWait,
+                                                k1 = k1, k2 = k2, pPercent =  pPercent)
           if(argOutput != "publish"){
             return(prikkData)
           }
@@ -398,7 +408,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                               nRep = nRep, digits = digitsA,  mismatchWarning = digitsB, 
                                               singletonMethod = singletonMethod, output = "publish_inner",
                                               allowTotal = allowTotal, 
-                                              iWait = iWait)
+                                              iWait = iWait,
+                                              k1 = k1, k2 = k2, pPercent =  pPercent)
       } else {
         a <- GaussSuppressDec(data, dimVar = alleVar, freqVar = freqVar, 
                                               protectZeros = protectZeros, maxN = maxN, 
@@ -433,7 +444,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                               sector = sector, private = private, between = between,
                                               singletonMethod = singletonMethod,
                                               allowTotal = allowTotal, 
-                                              iWait = iWait)
+                                              iWait = iWait,
+                                              k1 = k1, k2 = k2, pPercent =  pPercent)
       } else {
         prikkData <- GaussSuppressionFromData(data, dimVar = alleVar, freqVar = freqVar, 
                                               protectZeros = protectZeros, maxN = maxN, 

@@ -1,4 +1,29 @@
-Primary_FRTK_VIRK_UNIK_sektor <- function(data, freq, x, maxN, protectZeros, num, charVar, sector="sektor", private = "Privat", between = NULL, crossTable, allowTotal = FALSE, ...) {
+Primary_FRTK_VIRK_UNIK_sektor_dominance <- function(data, 
+                                                      freq, 
+                                                      x, 
+                                                      maxN, 
+                                                      protectZeros, 
+                                                      num, 
+                                                      charVar, 
+                                                      sector="sektor", 
+                                                      private = "Privat", 
+                                                      between = NULL, 
+                                                      crossTable, 
+                                                      allowTotal = FALSE,
+                                                      k1 = NULL,
+                                                      k2 = NULL,
+                                                      pPercent = NULL,
+                                                      freqVar = freqVar,
+                                                      ...) {
+  
+  magnitude_rule <- length(c(k1, k2, pPercent)) > 0
+  
+  if (magnitude_rule) {
+    if (!is.null(between)) {
+      stop("Bruk av k1, k2 eller pPercent ikke implementert i for dette tilfellet")
+    }
+  }
+  
   primary <- freq <= maxN
   
   if (anyNA(match(c(sector, "FRTK_VIRK_UNIK"), charVar))) 
@@ -34,6 +59,21 @@ Primary_FRTK_VIRK_UNIK_sektor <- function(data, freq, x, maxN, protectZeros, num
   primaryB[nPrivat == 1 & nOff == 1] <- TRUE
   primaryB[nPrivat == 2 & nOff == 0] <- TRUE
   
+  if (magnitude_rule) {
+    mc <- MaxContribution(x = x, y = data[[freqVar]], n = 2, groups = y)
+    mc[is.na(mc)] <- 0
+    p12 <- 100 * mc/freq
+    colnames(p12) <- c("dominance1", "dominance2")
+    if (!is.null(pPercent)) {
+      primaryB[((100 - p12[, 1] - p12[, 2])/p12[, 1]) < pPercent/100] <- TRUE
+    } else {
+      primaryB[p12[, 1] > k1] <- TRUE
+      primaryB[(p12[, 1] + p12[, 2]) > k2] <- TRUE
+    }
+  } else {
+    p12 <- matrix(0, length(freq), 0)
+  }
+  
   if(allowTotal){
     if(!length(between)){
       allowTotal <- FALSE
@@ -53,5 +93,5 @@ Primary_FRTK_VIRK_UNIK_sektor <- function(data, freq, x, maxN, protectZeros, num
   if (!protectZeros) 
     primary[freq == 0] <- FALSE   
   
-  list(primary = primary, numExtra = data.frame(nPrivat=nPrivat, nOff=nOff))
+  list(primary = primary, numExtra = cbind(data.frame(nPrivat=nPrivat, nOff=nOff), p12))
 }
