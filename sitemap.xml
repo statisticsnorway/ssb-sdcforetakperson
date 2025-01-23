@@ -1,57 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/404.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/SECURITY.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/index.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/CheckInput.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/KostraApply.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/Make_FRTK_VIRK_UNIK_AggVar.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/MissingReplaceFirst.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/Ones2agg.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/PLSroundingSuppressed.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/SdcData.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/SdcForetakPerson.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/SdcForetakPersonDecimalTest.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/lower_match.html</loc>
-  </url>
-  <url>
-    <loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/syssel100.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/404.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/LICENSE-text.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/LICENSE.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/SECURITY.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/authors.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/index.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/KostraApply.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/Make_FRTK_VIRK_UNIK_AggVar.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/MissingReplaceFirst.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/Ones2agg.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/PLSroundingSuppressed.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/SdcData.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/SdcForetakPerson.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/SdcForetakPersonDecimalTest.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/index.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/lower_match.html</loc></url>
+<url><loc>https://statisticsnorway.github.io/SdcForetakPerson/reference/syssel100.html</loc></url>
 </urlset>
+
