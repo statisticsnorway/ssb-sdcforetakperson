@@ -55,10 +55,10 @@
 #' @return data frame 
 #' @export
 #' @importFrom GaussSuppression GaussSuppressionFromData NcontributorsHolding Ncontributors GaussSuppressDec SuppressionFromDecimals MaxContribution
-#' @importFrom SSBtools WildcardGlobbingVector SortRows RowGroups Match
+#' @importFrom SSBtools WildcardGlobbingVector SortRows RowGroups Match CheckInput
 #' @importFrom methods hasArg
 #' @importFrom stats aggregate delete.response formula terms
-#' @importFrom utils flush.console
+#' @importFrom utils flush.console head
 #' @examples
 #' 
 #' prikkeVarA <- c("arb_fylke", "ARB_ARBKOMM", "nar8", "sektor")
