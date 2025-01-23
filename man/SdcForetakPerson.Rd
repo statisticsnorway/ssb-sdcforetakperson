@@ -33,7 +33,10 @@ SdcForetakPerson(
   digitsB = 5,
   allowTotal = FALSE,
   til0 = TRUE,
-  iWait = Inf
+  iWait = Inf,
+  k1 = NULL,
+  k2 = 2 * k1,
+  pPercent = NULL
 )
 }
 \arguments{
@@ -102,6 +105,12 @@ Når, i tillegg, \code{maxN} er \code{NULL} (default), er det mulig å spesifise
 prikking av undergrupper av denne opphevet og erstattet med 0.}
 
 \item{iWait}{Minimum antall sekunder mellom hver gang det skrives ut ekstra informasjon fra prikkerutinen.}
+
+\item{k1}{Parameter for dominansregel. Primærprikking når ett privat foretak har mer enn k1\% av antall personer i den aktuelle tabellcellen.}
+
+\item{k2}{Parameter for dominansregel. Primærprikking når to private foretak har mer enn k2\% av antall personer i den aktuelle tabellcellen.}
+
+\item{pPercent}{Parameter for p\%-regel som er alternativ til dominansregel. Dersom denne spesifiseres, ignoreres k1 og k2.}
 }
 \value{
 data frame
@@ -136,6 +145,11 @@ z100 <- SdcData("syssel100")
 out <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"))
 head(out)
 tail(out)
+
+# Bruke av dominansregler
+outD <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), 
+                         k1 = 40, k2 = 50, output = "suppressed")
+outD                        
 
 # Setter  allowTotal = TRUE
 outT <- SdcForetakPerson(z100, between = prikkeVarB, within = c("PERS_KJOENN", "alder6"), 
