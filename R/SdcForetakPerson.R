@@ -51,6 +51,8 @@
 #' @param k1 Parameter for dominansregel. Primærprikking når ett privat foretak har mer enn k1% av antall personer i den aktuelle tabellcellen.
 #' @param k2 Parameter for dominansregel. Primærprikking når to private foretak har mer enn k2% av antall personer i den aktuelle tabellcellen.
 #' @param pPercent Parameter for p%-regel som er alternativ til dominansregel. Dersom denne spesifiseres, ignoreres k1 og k2. 
+#' @param use_freqVar \code{\link[GaussSuppression]{GaussSuppressDec}} parameter.  TRUE betyr at desimaltallene er syntetiske frekvenstall.
+#'                    Ved FALSE (default) varierer desimaltallene  rundt 0.    
 #' 
 #' @return data frame 
 #' @export
@@ -149,7 +151,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             iWait = Inf, 
                             k1 = NULL,
                             k2 = 2*k1,
-                            pPercent = NULL){
+                            pPercent = NULL,
+                            use_freqVar = FALSE ){
   
   argOutput <- get0("GaussSuppressionFromData_argOutput", ifnotfound = "publish") # special input for testing from global environment
   
@@ -202,7 +205,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                         decimal = decimal, freqDec = freqDec, 
                         nRep = nRep, digitsA = digitsA, digitsB = digitsB,
                         allowTotal = allowTotal, til0 = til0, iWait = iWait,
-                        k1 = k1, k2 = k2, pPercent =  pPercent)) 
+                        k1 = k1, k2 = k2, pPercent =  pPercent,
+                        use_freqVar = use_freqVar)) 
   }
   
   if(class(between)[1] == "formula"){
@@ -322,7 +326,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                         output = ifelse(is.null(formula_decimal), "publish_inner", "inner"),
                                                 nRep = nRep, digits = digitsA,  mismatchWarning = digitsB, 
                                         iWait = iWait,
-                                        k1 = k1, k2 = k2, pPercent =  pPercent)
+                                        k1 = k1, k2 = k2, pPercent =  pPercent, 
+                                        use_freqVar = use_freqVar)
           
           if(!is.null(formula_decimal)){
             # names(a)[names(a) == freqVar] <- "freq"
@@ -414,7 +419,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                               singletonMethod = singletonMethod, output = "publish_inner",
                                               allowTotal = allowTotal, 
                                               iWait = iWait,
-                                              k1 = k1, k2 = k2, pPercent =  pPercent)
+                                              k1 = k1, k2 = k2, pPercent =  pPercent,
+                                              use_freqVar = use_freqVar)
       } else {
         a <- GaussSuppressDec(data, dimVar = alleVar, freqVar = freqVar, 
                                               protectZeros = protectZeros, maxN = maxN, 
@@ -422,7 +428,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                               preAggregate = preAggregate,
                                               nRep = nRep, digits = digitsA,  mismatchWarning = digitsB,
                                               singletonMethod = singletonMethod, output = "publish_inner", 
-                                              iWait = iWait)
+                                              iWait = iWait, 
+                                              use_freqVar = use_freqVar)
       }
       
       between <- alleVar # endrer siden delvis gjenbruk av kode 

@@ -1,14 +1,14 @@
 Package: SdcForetakPerson
 Type: Package
 Title: Prikking av foretak og avrunding eller prikking av personer
-Version: 0.3.0
-Date: 2025-01-23
+Version: 0.3.1
+Date: 2025-02-17
 Authors@R: c(person("Øyvind", "Langsrud", role = c("aut", "cre"), email = "oyl@ssb.no"),
              person("Statistics Norway", role = "cph"))
 Author: Øyvind Langsrud [aut, cre]
 Maintainer: Øyvind Langsrud <oyl@ssb.no>
 Depends: Matrix
-Imports: SSBtools (>= 1.5.2), GaussSuppression (> 0.4.0), SmallCountRounding, methods, utils
+Imports: SSBtools (>= 1.7.0), GaussSuppression (>= 0.9.5), SmallCountRounding, methods, utils
 Suggests: 
     testthat
 Description: R-pakke med funksjonen SdcForetakPerson.  
@@ -16,4 +16,4 @@ License: MIT + file LICENSE
 LazyData: TRUE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
