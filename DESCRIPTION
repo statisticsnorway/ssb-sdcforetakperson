@@ -1,8 +1,8 @@
 Package: SdcForetakPerson
 Type: Package
 Title: Prikking av foretak og avrunding eller prikking av personer
-Version: 0.3.1
-Date: 2025-02-17
+Version: 0.3.2
+Date: 2025-02-19
 Authors@R: c(person("Øyvind", "Langsrud", role = c("aut", "cre"), email = "oyl@ssb.no"),
              person("Statistics Norway", role = "cph"))
 Author: Øyvind Langsrud [aut, cre]

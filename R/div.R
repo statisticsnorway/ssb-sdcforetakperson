@@ -234,7 +234,7 @@ Make_NarWeight_00 <- function(x , narVar, nar00="00"){
 
 
 GaussSuppressed <- function(x, dimVar){
-  x = SortRows(x[x$suppressed, names(x) %in% dimVar])
+  x <- SortRows(x[x$suppressed, names(x) %in% dimVar, drop = FALSE])
   rownames(x) = NULL
   x
 }
