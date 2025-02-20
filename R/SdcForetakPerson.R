@@ -52,7 +52,10 @@
 #' @param k2 Parameter for dominansregel. Primærprikking når to private foretak har mer enn k2% av antall personer i den aktuelle tabellcellen.
 #' @param pPercent Parameter for p%-regel som er alternativ til dominansregel. Dersom denne spesifiseres, ignoreres k1 og k2. 
 #' @param use_freqVar \code{\link[GaussSuppression]{GaussSuppressDec}} parameter.  TRUE betyr at desimaltallene er syntetiske frekvenstall.
-#'                    Ved FALSE (default) varierer desimaltallene  rundt 0.    
+#'                    Ved FALSE (default) varierer desimaltallene  rundt 0. 
+#' @param decimal_waring  Når TRUE: Det sjekkes om aggregerte frekvenser fra desimaldata-input samsvarer med frekvenser beregnet fra data-input   
+#'                 (variabelen "original" i output fra \code{\link{PLSroundingSuppressed}}. Ved avvik kommer warning og det skrives ut noen rader.
+#'                 Begge datasettene kan sees ved å endre parameteren `output` (se over).
 #' 
 #' @return data frame 
 #' @export
@@ -152,7 +155,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             k1 = NULL,
                             k2 = 2*k1,
                             pPercent = NULL,
-                            use_freqVar = FALSE ){
+                            use_freqVar = FALSE, 
+                            decimal_waring = TRUE){
   
   argOutput <- get0("GaussSuppressionFromData_argOutput", ifnotfound = "publish") # special input for testing from global environment
   
@@ -162,6 +166,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     nace <- NULL
   } else {
     dataDec <- NULL
+    decimal_waring <- FALSE
   }
   
   
@@ -206,7 +211,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                         nRep = nRep, digitsA = digitsA, digitsB = digitsB,
                         allowTotal = allowTotal, til0 = til0, iWait = iWait,
                         k1 = k1, k2 = k2, pPercent =  pPercent,
-                        use_freqVar = use_freqVar)) 
+                        use_freqVar = use_freqVar,
+                        decimal_waring = decimal_waring)) 
   }
   
   if(class(between)[1] == "formula"){
@@ -534,6 +540,28 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
       ma1 <- ma1[prsData$roundedSuppressed[ma1] == 0L]
       ma2 <- !is.na(Match(prsData[ma, names(supData), drop = FALSE], prsData[ma1, names(supData), drop = FALSE]))
       prsData$roundedSuppressed[ma[ma2]] <- 0L
+    }
+  }
+  
+  if (decimal_waring) {
+    if (length(within)) {
+      within_ <- within[within %in% names(prsData)]
+      total_rows <- rowSums(prsData[within_] == "Total") == length(within_)
+    } else {
+      total_rows <- rep(TRUE, nrow(prsData))
+    }
+    ma <- Match(prsData[total_rows, names(supData)], prikkData[names(supData)])
+    
+    ind1 <- which(total_rows)[!is.na(ma)]
+    ind2 <- ma[!is.na(ma)]
+    f1 <- prsData[["original"]][ind1]
+    f2 <- prikkData[[freqVar]][ind2]
+    ind_diff <- which(abs(f2 - f1) >= 1)
+    if (length(ind_diff)) {
+      warning(paste("Frekvensavvik i", length(ind_diff), "rader."))
+      message(paste(length(head(ind_diff)), "av", length(ind_diff), "rader med frekvensavvik:"))
+      print(prsData[ind1[head(ind_diff)], , drop = FALSE])
+      print(prikkData[ind2[head(ind_diff)], , drop = FALSE])
     }
   }
   
