@@ -550,7 +550,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     } else {
       total_rows <- rep(TRUE, nrow(prsData))
     }
-    ma <- Match(prsData[total_rows, names(supData)], prikkData[names(supData)])
+    ma <- Match(prsData[total_rows, names(supData), drop = FALSE], prikkData[names(supData)])
     
     ind1 <- which(total_rows)[!is.na(ma)]
     ind2 <- ma[!is.na(ma)]
