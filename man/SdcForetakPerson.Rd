@@ -38,7 +38,7 @@ SdcForetakPerson(
   k2 = 2 * k1,
   pPercent = NULL,
   use_freqVar = FALSE,
-  decimal_waring = TRUE
+  decimal_warning = TRUE
 )
 }
 \arguments{
@@ -117,7 +117,7 @@ prikking av undergrupper av denne opphevet og erstattet med 0.}
 \item{use_freqVar}{\code{\link[GaussSuppression]{GaussSuppressDec}} parameter.  TRUE betyr at desimaltallene er syntetiske frekvenstall.
 Ved FALSE (default) varierer desimaltallene  rundt 0.}
 
-\item{decimal_waring}{Når TRUE: Det sjekkes om aggregerte frekvenser fra desimaldata-input samsvarer med frekvenser beregnet fra data-input
+\item{decimal_warning}{Når TRUE: Det sjekkes om aggregerte frekvenser fra desimaldata-input samsvarer med frekvenser beregnet fra data-input
 (variabelen "original" i output fra \code{\link{PLSroundingSuppressed}}. Ved avvik kommer warning og det skrives ut noen rader.
 Begge datasettene kan sees ved å endre parameteren \code{output} (se over).}
 }

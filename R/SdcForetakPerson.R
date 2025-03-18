@@ -53,7 +53,7 @@
 #' @param pPercent Parameter for p%-regel som er alternativ til dominansregel. Dersom denne spesifiseres, ignoreres k1 og k2. 
 #' @param use_freqVar \code{\link[GaussSuppression]{GaussSuppressDec}} parameter.  TRUE betyr at desimaltallene er syntetiske frekvenstall.
 #'                    Ved FALSE (default) varierer desimaltallene  rundt 0. 
-#' @param decimal_waring  Når TRUE: Det sjekkes om aggregerte frekvenser fra desimaldata-input samsvarer med frekvenser beregnet fra data-input   
+#' @param decimal_warning  Når TRUE: Det sjekkes om aggregerte frekvenser fra desimaldata-input samsvarer med frekvenser beregnet fra data-input   
 #'                 (variabelen "original" i output fra \code{\link{PLSroundingSuppressed}}. Ved avvik kommer warning og det skrives ut noen rader.
 #'                 Begge datasettene kan sees ved å endre parameteren `output` (se over).
 #' 
@@ -156,7 +156,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             k2 = 2*k1,
                             pPercent = NULL,
                             use_freqVar = FALSE, 
-                            decimal_waring = TRUE){
+                            decimal_warning = TRUE){
   
   argOutput <- get0("GaussSuppressionFromData_argOutput", ifnotfound = "publish") # special input for testing from global environment
   
@@ -166,7 +166,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     nace <- NULL
   } else {
     dataDec <- NULL
-    decimal_waring <- FALSE
+    decimal_warning <- FALSE
   }
   
   
@@ -212,7 +212,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                         allowTotal = allowTotal, til0 = til0, iWait = iWait,
                         k1 = k1, k2 = k2, pPercent =  pPercent,
                         use_freqVar = use_freqVar,
-                        decimal_waring = decimal_waring)) 
+                        decimal_warning = decimal_warning)) 
   }
   
   if(class(between)[1] == "formula"){
@@ -543,7 +543,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     }
   }
   
-  if (decimal_waring) {
+  if (decimal_warning) {
     if (length(within)) {
       within_ <- within[within %in% names(prsData)]
       total_rows <- rowSums(prsData[within_] == "Total") == length(within_)
