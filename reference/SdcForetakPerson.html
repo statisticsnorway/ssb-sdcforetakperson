@@ -9,7 +9,7 @@ Sett parameteren allowTotal til TRUE for at kategorier innen (within) foretak sk
 
     <a class="navbar-brand me-2" href="../index.html">SdcForetakPerson</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,9 @@ Sett parameteren <code>allowTotal</code> til <code>TRUE</code> for at kategorier
 <span>  iWait <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  k1 <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  k2 <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">k1</span>,</span>
-<span>  pPercent <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  pPercent <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  use_freqVar <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  decimal_warning <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -213,6 +215,17 @@ prikking av undergrupper av denne opphevet og erstattet med 0.</p></dd>
 
 <dt id="arg-ppercent">pPercent<a class="anchor" aria-label="anchor" href="#arg-ppercent"></a></dt>
 <dd><p>Parameter for p%-regel som er alternativ til dominansregel. Dersom denne spesifiseres, ignoreres k1 og k2.</p></dd>
+
+
+<dt id="arg-use-freqvar">use_freqVar<a class="anchor" aria-label="anchor" href="#arg-use-freqvar"></a></dt>
+<dd><p><code><a href="https://statisticsnorway.github.io/ssb-gausssuppression/reference/GaussSuppressDec.html" class="external-link">GaussSuppressDec</a></code> parameter.  TRUE betyr at desimaltallene er syntetiske frekvenstall.
+Ved FALSE (default) varierer desimaltallene  rundt 0.</p></dd>
+
+
+<dt id="arg-decimal-warning">decimal_warning<a class="anchor" aria-label="anchor" href="#arg-decimal-warning"></a></dt>
+<dd><p>Når TRUE: Det sjekkes om aggregerte frekvenser fra desimaldata-input samsvarer med frekvenser beregnet fra data-input
+(variabelen "original" i output fra <code><a href="PLSroundingSuppressed.html">PLSroundingSuppressed</a></code>. Ved avvik kommer warning og det skrives ut noen rader.
+Begge datasettene kan sees ved å endre parameteren <code>output</code> (se over).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -452,58 +465,58 @@ Det kan også være <code>"frtk_id_SSB"</code> om man vil.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [preAggregate 27*14-&gt;21*7]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [extraAggregate 21*7-&gt;10*7] Checking .....</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GaussSuppression_anySumNOTprimary: .........................</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    arb_fylke ARB_ARBKOMM  nar8  sektor freq nPrivat nOff prikk  freqDec1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         05        0518    84 Kommual    3       0    3     1 3.1504665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         05        0518    84 Statlig    2       0    2     1 1.8495335</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         05        0531    84 Kommual    6       0    4     1 5.8495335</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4         05        0531 45-82  Privat    4       3    0     1 3.4787405</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5         05        0531    84 Statlig    2       0    2     1 2.6717260</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6         18        1821    84 Kommual    2       0    1     1 2.5212595</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7         18        1821    84 Statlig    2       0    2     1 1.4787405</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8         18        1822    84 Kommual    1       0    1     1 0.4787405</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9         18        1822 45-82  Privat    2       2    0     1 2.5212595</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10        18        1822    84 Statlig    3       0    1     0 3.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     freqDec2 freqDec3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  3.0447216 3.925517</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1.9552784 1.074483</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  5.9552784 5.074483</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  3.6010655 4.573543</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  2.4436561 2.351974</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2.3989345 1.426457</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  1.6010655 2.573543</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  0.6010655 1.573543</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  2.3989345 1.426457</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 3.0000000 3.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    arb_fylke ARB_ARBKOMM  nar8  sektor freq nPrivat nOff prikk   freqDec1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         05        0518    84 Kommual    3       0    3     1 -0.5886639</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2         05        0518    84 Statlig    2       0    2     1  0.5886639</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3         05        0531    84 Kommual    6       0    4     1  0.5886639</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4         05        0531 45-82  Privat    4       3    0     1 -0.4777813</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5         05        0531    84 Statlig    2       0    2     1 -0.1108827</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6         18        1821    84 Kommual    2       0    1     1  0.4777813</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7         18        1821    84 Statlig    2       0    2     1 -0.4777813</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8         18        1822    84 Kommual    1       0    1     1 -0.4777813</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9         18        1822 45-82  Privat    2       2    0     1  0.4777813</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10        18        1822    84 Statlig    3       0    1     0  0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      freqDec2   freqDec3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  -0.6944088  0.1863865</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   0.6944088 -0.1863865</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   0.6944088 -0.1863865</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  -0.3554562  0.6170217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  -0.3389526 -0.4306352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   0.3554562 -0.6170217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  -0.3554562  0.6170217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  -0.3554562  0.6170217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   0.3554562 -0.6170217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  0.0000000  0.0000000</span>
 <span class="r-in"><span><span class="fu">SdcForetakPerson</span><span class="op">(</span><span class="va">z</span>, between <span class="op">=</span> <span class="va">prikkeVarB</span>, within <span class="op">=</span> <span class="st">"PERS_KJOENN"</span>, maxN <span class="op">=</span> <span class="fl">2</span>, decimal <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [preAggregate 27*14-&gt;24*8]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [extraAggregate 24*8-&gt;12*7] Checking .....</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GaussSuppression_anySumNOTprimary: .....................................</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    arb_fylke ARB_ARBKOMM nar17 PERS_KJOENN freq nPrivat nOff prikk   freqDec1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         05        0518    84           1    1       0    5     1  1.9107055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         05        0518    84           2    4       0    5     1  3.0892945</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         05        0531 58-63           1    2       3    0     1  1.0892945</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4         05        0531 58-63           2    2       3    0     1  3.6211762</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5         05        0531    84           1    3       0    6     0  3.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6         05        0531    84           2    5       0    6     1  4.2895294</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7         18        1821    84           1    2       0    3     1  2.2229241</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8         18        1821    84           2    2       0    3     1  1.7770759</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9         18        1822 58-63           1    1       2    0     1  1.9107055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10        18        1822 58-63           2    1       2    0     1 -0.6211762</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11        18        1822    84           1    3       0    2     1  1.8663703</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12        18        1822    84           2    1       0    2     1  2.8441003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    arb_fylke ARB_ARBKOMM nar17 PERS_KJOENN freq nPrivat nOff prikk    freqDec1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         05        0518    84           1    1       0    5     1  0.47320555</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2         05        0518    84           2    4       0    5     1 -0.47320555</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3         05        0531 58-63           1    2       3    0     1 -0.47320555</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4         05        0531 58-63           2    2       3    0     1  0.80867619</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5         05        0531    84           1    3       0    6     0  0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6         05        0531    84           2    5       0    6     1 -0.33547064</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7         18        1821    84           1    2       0    3     1  0.03542413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8         18        1821    84           2    2       0    3     1 -0.03542413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9         18        1822 58-63           1    1       2    0     1  0.47320555</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10        18        1822 58-63           2    1       2    0     1 -0.80867619</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11        18        1822    84           1    3       0    2     1 -0.50862968</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12        18        1822    84           2    1       0    2     1  0.84410033</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      freqDec2   freqDec3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1.1812143  1.1928988</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   3.8187857  3.8071012</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1.8187857  1.8071012</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   3.5291489  3.4884345</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   3.0000000  3.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   3.6520654  3.7044643</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   1.7094074  1.6271230</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2.2905926  2.3728770</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   1.1812143  1.1928988</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 -0.5291489 -0.4884345</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3.1093783  3.1799782</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  2.2385564  2.1155575</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  -0.2562857 -0.2446012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   0.2562857  0.2446012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   0.2562857  0.2446012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   0.7166489  0.6759345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   0.0000000  0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  -0.9729346 -0.9205357</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  -0.4780926 -0.5603770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   0.4780926  0.5603770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  -0.2562857 -0.2446012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 -0.7166489 -0.6759345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  0.7343783  0.8049782</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  0.2385564  0.1155575</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">z100</span> <span class="op">&lt;-</span> <span class="fu"><a href="SdcData.html">SdcData</a></span><span class="op">(</span><span class="st">"syssel100"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">SdcForetakPerson</span><span class="op">(</span><span class="va">z100</span>, between <span class="op">=</span> <span class="va">prikkeVarB</span>, within <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PERS_KJOENN"</span>, <span class="st">"alder6"</span><span class="op">)</span><span class="op">)</span></span></span>
