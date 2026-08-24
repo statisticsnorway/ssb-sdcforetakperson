@@ -56,6 +56,20 @@
 #' @param decimal_warning  Når TRUE: Det sjekkes om aggregerte frekvenser fra desimaldata-input samsvarer med frekvenser beregnet fra data-input   
 #'                 (variabelen "original" i output fra \code{\link{PLSroundingSuppressed}}. Ved avvik kommer warning og det skrives ut noen rader.
 #'                 Begge datasettene kan sees ved å endre parameteren `output` (se over).
+#' @param double_vars Spesifisering av doble nace-koder, f.eks: 
+#'                           `list(nar8_begge = c("nar8", "nar8_ny"), nar17_begge = c("nar17", "nar17_ny"))`.
+#'                    Da brukes `nar8_begge` og `nar17_begge` i `between`-formel, 
+#'                    mens de andre kodene er variablene i `data` for gammel og ny standard. 
+#' @param double_priority Spesifisering av prioritet tilknyttet doble nace-koder, samt spesifisering av spesielle kjøringer. 
+#'                        Mulige valg er 
+#' * **`0`:** Kun differanseceller nedprioriteres.
+#' * **`1` eller `2`:** Første eller andre nace-kode prioriteres.
+#' * **`-1` eller `-2`:** Kjøring med kun første eller andre nace-kode.
+#' * **`-9`:**  Kjøring ute bruk av prioritering (for testing). 
+#' @param use_diff_groups Hvorvidt differanseceller skal hensyntas. Mulige valg er 
+#'                        `FALSE` (nei), 
+#'                        `TRUE` (kun enkle differanser) eller 
+#'                        `"extra"` (kompliserte differanseceller inkluderes).  
 #' 
 #' @return data frame 
 #' @export
@@ -130,6 +144,49 @@
 #' out127 <- SdcForetakPerson(z127, between = prikkeVarB, by = "stataar")
 #' head(out127)
 #' tail(out127)
+#' 
+#' 
+#' ###############################################################
+#' #  Bruk av double_vars, use_diff_groups og double_priority
+#' ###############################################################
+#' 
+#' # Genererer først noen doble nace-koder i dataene
+#' z100$nar8_ny <- z100$nar8
+#' z100$nar17_ny <- z100$nar17
+#' z100$nar8_ny[31:32] <- "X"
+#' z100$nar17_ny[31:32] <- "X"
+#' z100$nar8_ny[40:41] <- "Y"
+#' z100$nar17_ny[40:41] <- "Y"
+#' 
+#' 
+#' #  "nar8_ny" og "nar17_ny" prioriteres
+#' dataDec2c <- SdcForetakPerson(z100, 
+#'     between = ~(arb_fylke + ARB_ARBKOMM) * nar8_begge * sektor + 
+#'                (arb_fylke + ARB_ARBKOMM) * nar17_begge, 
+#'     nace = "nar8", decimal = TRUE, 
+#'     double_vars = list(nar8_begge = c("nar8", "nar8_ny"), 
+#'                        nar17_begge = c("nar17", "nar17_ny")), 
+#'     use_diff_groups = TRUE, 
+#'     double_priority = 2)
+#' outA <- SdcForetakPerson(z100, between = prikkeVarA, decimal = dataDec2c)
+#' outB <- SdcForetakPerson(z100, between = prikkeVarB, within = "PERS_KJOENN", decimal = dataDec2c)
+#' sum(is.na(outA$roundedSuppressed)) + sum(is.na(outB$roundedSuppressed))  # antall prikker
+#' 
+#' 
+#' #  "nar8" og "nar17" prioriteres
+#' dataDec2c <- SdcForetakPerson(z100, 
+#'     between = ~(arb_fylke + ARB_ARBKOMM) * nar8_begge * sektor + 
+#'                (arb_fylke + ARB_ARBKOMM) * nar17_begge, 
+#'     nace = "nar8", decimal = TRUE, 
+#'     double_vars = list(nar8_begge = c("nar8", "nar8_ny"), 
+#'                        nar17_begge = c("nar17", "nar17_ny")), 
+#'     use_diff_groups = TRUE, 
+#'     double_priority = 1)
+#' outA <- SdcForetakPerson(z100, between = prikkeVarA, decimal = dataDec2c)
+#' outB <- SdcForetakPerson(z100, between = prikkeVarB, within = "PERS_KJOENN", decimal = dataDec2c)
+#' sum(is.na(outA$roundedSuppressed)) + sum(is.na(outB$roundedSuppressed))  # antall prikker
+#' 
+#' 
 SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL, 
                             roundBase = 3, maxN = NULL,
                             protectZeros = FALSE, 
@@ -156,7 +213,10 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             k2 = 2*k1,
                             pPercent = NULL,
                             use_freqVar = FALSE, 
-                            decimal_warning = TRUE){
+                            decimal_warning = TRUE,
+                            double_vars = NULL,
+                            double_priority = 0,
+                            use_diff_groups = FALSE){
   
   argOutput <- get0("GaussSuppressionFromData_argOutput", ifnotfound = "publish") # special input for testing from global environment
   
@@ -194,9 +254,9 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   
   
   if(!is.null(by)){
-    #if(!is.null(dataDec)){
-    # stop("Desimal-input kombinert med by er ikke implementert")
-    #}
+    if(!is.null(double_vars)){
+     stop("double_vars kombinert med by er ikke implementert")
+    }
     
     if(!(output %in% c("rounded", "suppressed")))
       stop('Output must be "rounded" or "suppressed" when non-NULL "by"')
@@ -215,11 +275,43 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                         decimal_warning = decimal_warning)) 
   }
   
+  
+  ignore_vars <- list()
   if(class(between)[1] == "formula"){
     if(!decimal | !is.null(maxN)){
       stop("between som formel bare implementert for decimal=TRUE/maxN=NULL")
     }
     formula_decimal <- between
+    if (!is.null(double_vars)) {
+      if (double_priority %in% c(-1, -2)) {
+        for (i in seq_along(double_vars)) {
+          double_vars[[i]] <- double_vars[[i]][-double_priority]
+        }
+      } else {
+        ignore_vars <- list(ignore_vars = character(0), ignore_diff = character(0))
+        for (i in seq_along(double_vars)) {
+          if (double_priority >= 1) {
+            ignore_vars[["ignore_vars"]] <- 
+              c(ignore_vars[["ignore_vars"]], rev(double_vars[[i]])[double_priority])
+          }
+        }
+        if (!isFALSE(use_diff_groups)) {
+          for (i in seq_along(double_vars)) {
+            names_data <- names(data)
+            data <- my_data_diff_groups(data, 
+                                        input_vars = double_vars[[i]], 
+                                        diff_extra = identical(use_diff_groups, "extra"), 
+                                        diff_name = names(double_vars)[i])
+            if (double_priority >= 0) {
+              ignore_vars[["ignore_diff"]] <- c(ignore_vars[["ignore_diff"]], comment(data))
+            }
+            double_vars[[i]] <- c(double_vars[[i]], comment(data))
+          }
+          comment(data) <- NULL
+        }
+      }
+      formula_decimal <- SSBtools::substitute_formula_vars(formula_decimal, double_vars)
+    }
     dimVar_decimal <- NULL 
     between <- row.names(attr(delete.response(terms(formula_decimal)), "factors"))
   } else {
@@ -318,7 +410,10 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                           sector = sector, private = private, #output = "publish_inner",
                                           output = argOutput, 
                                           iWait = iWait, 
-                                          k1 = k1, k2 = k2, pPercent =  pPercent)
+                                          k1 = k1, k2 = k2, pPercent =  pPercent, 
+                                          candidates = candidates_ignore_vars,
+                                          ignore_vars = ignore_vars,
+                                          avoidHierarchical = TRUE, hierarchical_extend0 = TRUE)
             return(prikkData)
           }
           a <-         GaussSuppressDec(data, dimVar = dimVar_decimal, freqVar = freqVar, 
@@ -333,7 +428,10 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                                 nRep = nRep, digits = digitsA,  mismatchWarning = digitsB, 
                                         iWait = iWait,
                                         k1 = k1, k2 = k2, pPercent =  pPercent, 
-                                        use_freqVar = use_freqVar)
+                                        use_freqVar = use_freqVar, 
+                                        candidates = candidates_ignore_vars,
+                                        ignore_vars = ignore_vars,
+                                        avoidHierarchical = TRUE, hierarchical_extend0 = TRUE)
           
           if(!is.null(formula_decimal)){
             # names(a)[names(a) == freqVar] <- "freq"
@@ -571,3 +669,42 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   list( rounded = prsData, suppressed = prikkData)
 }
   
+
+
+my_data_diff_groups <- function(data, diff_name, ...) {
+  ncol_data <- ncol(data)
+  d <- SSBtools::data_diff_groups(data, ..., 
+                                  output_vars = c(diff_1_2 = paste0(diff_name, "_diff_1_2"), 
+                                                  diff_2_1 = paste0(diff_name, "_diff_2_1")))
+  d_new <- d[-seq_len(ncol_data)]
+  new_names <- names(d_new)[colSums(!is.na(d_new)) > 0]
+  comment(d) <- new_names
+  d
+}
+
+
+candidates_ignore_vars <- function(ignore_vars, ..., crossTable) {
+  candidates <- GaussSuppression::CandidatesDefault(...)
+  for (j in seq_along(ignore_vars)) {
+    to_ignore <- rep(FALSE, length(candidates))
+    for (i in seq_along(ignore_vars[[j]])) {
+      to_ignore[(crossTable[[ignore_vars[[j]][i]]])[candidates] != "Total"] <- TRUE
+    }
+    candidates <- c(candidates[!to_ignore], candidates[to_ignore])
+  }
+  candidates
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

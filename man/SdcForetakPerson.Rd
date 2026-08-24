@@ -38,7 +38,10 @@ SdcForetakPerson(
   k2 = 2 * k1,
   pPercent = NULL,
   use_freqVar = FALSE,
-  decimal_warning = TRUE
+  decimal_warning = TRUE,
+  double_vars = NULL,
+  double_priority = 0,
+  use_diff_groups = FALSE
 )
 }
 \arguments{
@@ -120,6 +123,25 @@ Ved FALSE (default) varierer desimaltallene  rundt 0.}
 \item{decimal_warning}{Når TRUE: Det sjekkes om aggregerte frekvenser fra desimaldata-input samsvarer med frekvenser beregnet fra data-input
 (variabelen "original" i output fra \code{\link{PLSroundingSuppressed}}. Ved avvik kommer warning og det skrives ut noen rader.
 Begge datasettene kan sees ved å endre parameteren \code{output} (se over).}
+
+\item{double_vars}{Spesifisering av doble nace-koder, f.eks:
+\code{list(nar8_begge = c("nar8", "nar8_ny"), nar17_begge = c("nar17", "nar17_ny"))}.
+Da brukes \code{nar8_begge} og \code{nar17_begge} i \code{between}-formel,
+mens de andre kodene er variablene i \code{data} for gammel og ny standard.}
+
+\item{double_priority}{Spesifisering av prioritet tilknyttet doble nace-koder, samt spesifisering av spesielle kjøringer.
+Mulige valg er
+\itemize{
+\item \strong{\code{0}:} Kun differanseceller nedprioriteres.
+\item \strong{\code{1} eller \code{2}:} Første eller andre nace-kode prioriteres.
+\item \strong{\code{-1} eller \code{-2}:} Kjøring med kun første eller andre nace-kode.
+\item \strong{\code{-9}:}  Kjøring ute bruk av prioritering (for testing).
+}}
+
+\item{use_diff_groups}{Hvorvidt differanseceller skal hensyntas. Mulige valg er
+\code{FALSE} (nei),
+\code{TRUE} (kun enkle differanser) eller
+\code{"extra"} (kompliserte differanseceller inkluderes).}
 }
 \value{
 data frame
@@ -200,4 +222,47 @@ z127 <- rbind(z100, z)
 out127 <- SdcForetakPerson(z127, between = prikkeVarB, by = "stataar")
 head(out127)
 tail(out127)
+
+
+###############################################################
+#  Bruk av double_vars, use_diff_groups og double_priority
+###############################################################
+
+# Genererer først noen doble nace-koder i dataene
+z100$nar8_ny <- z100$nar8
+z100$nar17_ny <- z100$nar17
+z100$nar8_ny[31:32] <- "X"
+z100$nar17_ny[31:32] <- "X"
+z100$nar8_ny[40:41] <- "Y"
+z100$nar17_ny[40:41] <- "Y"
+
+
+#  "nar8_ny" og "nar17_ny" prioriteres
+dataDec2c <- SdcForetakPerson(z100, 
+    between = ~(arb_fylke + ARB_ARBKOMM) * nar8_begge * sektor + 
+               (arb_fylke + ARB_ARBKOMM) * nar17_begge, 
+    nace = "nar8", decimal = TRUE, 
+    double_vars = list(nar8_begge = c("nar8", "nar8_ny"), 
+                       nar17_begge = c("nar17", "nar17_ny")), 
+    use_diff_groups = TRUE, 
+    double_priority = 2)
+outA <- SdcForetakPerson(z100, between = prikkeVarA, decimal = dataDec2c)
+outB <- SdcForetakPerson(z100, between = prikkeVarB, within = "PERS_KJOENN", decimal = dataDec2c)
+sum(is.na(outA$roundedSuppressed)) + sum(is.na(outB$roundedSuppressed))  # antall prikker
+
+
+#  "nar8" og "nar17" prioriteres
+dataDec2c <- SdcForetakPerson(z100, 
+    between = ~(arb_fylke + ARB_ARBKOMM) * nar8_begge * sektor + 
+               (arb_fylke + ARB_ARBKOMM) * nar17_begge, 
+    nace = "nar8", decimal = TRUE, 
+    double_vars = list(nar8_begge = c("nar8", "nar8_ny"), 
+                       nar17_begge = c("nar17", "nar17_ny")), 
+    use_diff_groups = TRUE, 
+    double_priority = 1)
+outA <- SdcForetakPerson(z100, between = prikkeVarA, decimal = dataDec2c)
+outB <- SdcForetakPerson(z100, between = prikkeVarB, within = "PERS_KJOENN", decimal = dataDec2c)
+sum(is.na(outA$roundedSuppressed)) + sum(is.na(outB$roundedSuppressed))  # antall prikker
+
+
 }
