@@ -216,7 +216,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             decimal_warning = TRUE,
                             double_vars = NULL,
                             double_priority = 0,
-                            use_diff_groups = FALSE){
+                            use_diff_groups = FALSE,
+                            linkedGauss = NULL){
   
   argOutput <- get0("GaussSuppressionFromData_argOutput", ifnotfound = "publish") # special input for testing from global environment
   
@@ -310,10 +311,27 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
           comment(data) <- NULL
         }
       }
-      formula_decimal <- SSBtools::substitute_formula_vars(formula_decimal, double_vars)
+      if (!is.null(linkedGauss) & double_priority >= 0) {
+        double_vars_a <- double_vars
+        double_vars_b <- double_vars
+        for (i in seq_along(double_vars)) {
+          double_vars_a[[i]] <- double_vars[[i]][-2]
+          double_vars_b[[i]] <- double_vars[[i]][-1]
+        }
+        formula_decimal <- list(
+          a = SSBtools::substitute_formula_vars(formula_decimal, double_vars_a),
+          b = SSBtools::substitute_formula_vars(formula_decimal, double_vars_b))
+      } else {
+        formula_decimal <- SSBtools::substitute_formula_vars(formula_decimal, double_vars) 
+      }
     }
-    dimVar_decimal <- NULL 
-    between <- row.names(attr(delete.response(terms(formula_decimal)), "factors"))
+    dimVar_decimal <- NULL
+    if (is.list(formula_decimal)) {
+      formula_ <-  SSBtools::combine_formulas(formula_decimal)
+    } else {
+      formula_ <- formula_decimal
+    }
+    between <- row.names(attr(delete.response(terms(formula_)), "factors"))
   } else {
     formula_decimal <- NULL
     dimVar_decimal <- between
@@ -413,7 +431,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                           k1 = k1, k2 = k2, pPercent =  pPercent, 
                                           candidates = candidates_ignore_vars,
                                           ignore_vars = ignore_vars,
-                                          avoidHierarchical = TRUE, hierarchical_extend0 = TRUE)
+                                          avoidHierarchical = TRUE, hierarchical_extend0 = TRUE,
+                                          linkedGauss = linkedGauss)
             return(prikkData)
           }
           a <-         GaussSuppressDec(data, dimVar = dimVar_decimal, freqVar = freqVar, 
@@ -431,7 +450,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                         use_freqVar = use_freqVar, 
                                         candidates = candidates_ignore_vars,
                                         ignore_vars = ignore_vars,
-                                        avoidHierarchical = TRUE, hierarchical_extend0 = TRUE)
+                                        avoidHierarchical = TRUE, hierarchical_extend0 = TRUE,
+                                        linkedGauss = linkedGauss, linked_rep = TRUE)
           
           if(!is.null(formula_decimal)){
             # names(a)[names(a) == freqVar] <- "freq"

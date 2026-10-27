@@ -41,7 +41,8 @@ SdcForetakPerson(
   decimal_warning = TRUE,
   double_vars = NULL,
   double_priority = 0,
-  use_diff_groups = FALSE
+  use_diff_groups = FALSE,
+  linkedGauss = NULL
 )
 }
 \arguments{
