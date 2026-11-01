@@ -252,6 +252,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   
   
   CheckInput(by,  type = "varNrName", data = data, okNULL = TRUE, okSeveral = TRUE)
+  CheckInput(double_priority, type = "integer", alt = c(-9, -2:2))
   
   
   if(!is.null(by)){
