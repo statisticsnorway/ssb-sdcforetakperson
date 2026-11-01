@@ -70,6 +70,14 @@
 #'                        `FALSE` (nei), 
 #'                        `TRUE` (kun enkle differanser) eller 
 #'                        `"extra"` (kompliserte differanseceller inkluderes).  
+#'
+#' @param linkedGauss Hvorvidt en linked-table-algoritme skal benyttes.
+#'                    Parameteren har betydning når `decimal = TRUE` og `double_vars` benyttes.
+#'                    Ved annen input enn `TRUE` eller `FALSE` (default), 
+#'                    benyttes parameteren direkte som input til 
+#'                    [GaussSuppression::GaussSuppressDec()]. 
+#'                    Merk at `TRUE` er det samme som  `"super-consistent"`.
+#' 
 #' @param linked_table Spesifisering tilknyttet doble nace-koder når når decimal er en data-frame.
 #'                     Når parameteren benyttes ignoreres  `freqDec`-parameteren.                       
 #' * **`0`:** Default. Ingen  spesifisering.
@@ -222,7 +230,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             double_vars = NULL,
                             double_priority = 0,
                             use_diff_groups = FALSE,
-                            linkedGauss = NULL,
+                            linkedGauss = FALSE,
                             linked_table = 0){
   
   argOutput <- get0("GaussSuppressionFromData_argOutput", ifnotfound = "publish") # special input for testing from global environment
@@ -260,6 +268,13 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   CheckInput(by,  type = "varNrName", data = data, okNULL = TRUE, okSeveral = TRUE)
   CheckInput(double_priority, type = "integer", alt = c(-9, -2:2))
   CheckInput(linked_table, type = "integer", alt = 0:2)
+  
+  if (isTRUE(linkedGauss)) {
+    linkedGauss <- "super-consistent"
+  }
+  if (isFALSE(linkedGauss)) {
+    linkedGauss <- NULL
+  }
   
   if (linked_table > 0) {
     freqDec <- paste0(c("a_", "b_")[linked_table], "freqDec*")

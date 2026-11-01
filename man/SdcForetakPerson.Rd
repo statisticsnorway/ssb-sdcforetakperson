@@ -42,7 +42,7 @@ SdcForetakPerson(
   double_vars = NULL,
   double_priority = 0,
   use_diff_groups = FALSE,
-  linkedGauss = NULL,
+  linkedGauss = FALSE,
   linked_table = 0
 )
 }
@@ -144,6 +144,13 @@ Mulige valg er
 \code{FALSE} (nei),
 \code{TRUE} (kun enkle differanser) eller
 \code{"extra"} (kompliserte differanseceller inkluderes).}
+
+\item{linkedGauss}{Hvorvidt en linked-table-algoritme skal benyttes.
+Parameteren har betydning når \code{decimal = TRUE} og \code{double_vars} benyttes.
+Ved annen input enn \code{TRUE} eller \code{FALSE} (default),
+benyttes parameteren direkte som input til
+\code{\link[GaussSuppression:GaussSuppressDec]{GaussSuppression::GaussSuppressDec()}}.
+Merk at \code{TRUE} er det samme som  \code{"super-consistent"}.}
 
 \item{linked_table}{Spesifisering tilknyttet doble nace-koder når når decimal er en data-frame.
 Når parameteren benyttes ignoreres  \code{freqDec}-parameteren.
