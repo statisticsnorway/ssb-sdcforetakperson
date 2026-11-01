@@ -42,7 +42,8 @@ SdcForetakPerson(
   double_vars = NULL,
   double_priority = 0,
   use_diff_groups = FALSE,
-  linkedGauss = NULL
+  linkedGauss = NULL,
+  linked_table = 0
 )
 }
 \arguments{
@@ -143,6 +144,14 @@ Mulige valg er
 \code{FALSE} (nei),
 \code{TRUE} (kun enkle differanser) eller
 \code{"extra"} (kompliserte differanseceller inkluderes).}
+
+\item{linked_table}{Spesifisering tilknyttet doble nace-koder når når decimal er en data-frame.
+Når parameteren benyttes ignoreres  \code{freqDec}-parameteren.
+\itemize{
+\item \strong{\code{0}:} Default. Ingen  spesifisering.
+\item \strong{\code{1}:} Desimaltall for første nace-kode benyttes.
+\item \strong{\code{2}:} Desimaltall for andre nace-kode benyttes.
+}}
 }
 \value{
 data frame

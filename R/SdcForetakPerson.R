@@ -70,6 +70,11 @@
 #'                        `FALSE` (nei), 
 #'                        `TRUE` (kun enkle differanser) eller 
 #'                        `"extra"` (kompliserte differanseceller inkluderes).  
+#' @param linked_table Spesifisering tilknyttet doble nace-koder når når decimal er en data-frame.
+#'                     Når parameteren benyttes ignoreres  `freqDec`-parameteren.                       
+#' * **`0`:** Default. Ingen  spesifisering.
+#' * **`1`:** Desimaltall for første nace-kode benyttes.
+#' * **`2`:** Desimaltall for andre nace-kode benyttes.
 #' 
 #' @return data frame 
 #' @export
@@ -217,7 +222,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             double_vars = NULL,
                             double_priority = 0,
                             use_diff_groups = FALSE,
-                            linkedGauss = NULL){
+                            linkedGauss = NULL,
+                            linked_table = 0){
   
   argOutput <- get0("GaussSuppressionFromData_argOutput", ifnotfound = "publish") # special input for testing from global environment
   
@@ -253,7 +259,11 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
   
   CheckInput(by,  type = "varNrName", data = data, okNULL = TRUE, okSeveral = TRUE)
   CheckInput(double_priority, type = "integer", alt = c(-9, -2:2))
+  CheckInput(linked_table, type = "integer", alt = 0:2)
   
+  if (linked_table > 0) {
+    freqDec <- paste0(c("a_", "b_")[linked_table], "freqDec*")
+  }
   
   if(!is.null(by)){
     if(!is.null(double_vars)){
