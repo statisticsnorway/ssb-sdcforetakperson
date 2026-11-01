@@ -8,7 +8,7 @@ Authors@R: c(person("Øyvind", "Langsrud", role = c("aut", "cre"), email = "oyl@
 Author: Øyvind Langsrud [aut, cre]
 Maintainer: Øyvind Langsrud <oyl@ssb.no>
 Depends: Matrix
-Imports: SSBtools (>= 1.7.0), GaussSuppression (>= 0.9.5), SmallCountRounding, methods, utils
+Imports: SSBtools, GaussSuppression (>= 1.3.2), SmallCountRounding, methods, utils
 Suggests: 
     testthat
 Description: R-pakke med funksjonen SdcForetakPerson.  
