@@ -84,6 +84,12 @@
 #' * **`1`:** Desimaltall for første nace-kode benyttes.
 #' * **`2`:** Desimaltall for andre nace-kode benyttes.
 #' 
+#' @param collapseAware Parameter til [GaussSuppression::GaussSuppressionFromData()] 
+#'        tilknyttet bruken av `linkedGauss`. Det gir liten mening med annet enn 
+#'        `collapseAware = TRUE` (default). 
+#'        Ellers vil ikke differanseceller være beskyttet.  
+#'        Parameteren er med slik at effekten av denne kan undersøkes. 
+#' 
 #' @return data frame 
 #' @export
 #' @importFrom GaussSuppression GaussSuppressionFromData NcontributorsHolding Ncontributors GaussSuppressDec SuppressionFromDecimals MaxContribution
@@ -231,7 +237,8 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             double_priority = 0,
                             use_diff_groups = FALSE,
                             linkedGauss = FALSE,
-                            linked_table = 0){
+                            linked_table = 0,
+                            collapseAware = TRUE){
   
   argOutput <- get0("GaussSuppressionFromData_argOutput", ifnotfound = "publish") # special input for testing from global environment
   
@@ -458,7 +465,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                           candidates = candidates_ignore_vars,
                                           ignore_vars = ignore_vars,
                                           avoidHierarchical = TRUE, hierarchical_extend0 = TRUE,
-                                          linkedGauss = linkedGauss)
+                                          linkedGauss = linkedGauss, collapseAware = collapseAware)
             return(prikkData)
           }
           a <-         GaussSuppressDec(data, dimVar = dimVar_decimal, freqVar = freqVar, 
@@ -477,7 +484,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                         candidates = candidates_ignore_vars,
                                         ignore_vars = ignore_vars,
                                         avoidHierarchical = TRUE, hierarchical_extend0 = TRUE,
-                                        linkedGauss = linkedGauss, linked_rep = TRUE)
+                                        linkedGauss = linkedGauss, collapseAware = collapseAware, linked_rep = TRUE)
           
           if(!is.null(formula_decimal)){
             # names(a)[names(a) == freqVar] <- "freq"

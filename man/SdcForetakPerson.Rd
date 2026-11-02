@@ -43,7 +43,8 @@ SdcForetakPerson(
   double_priority = 0,
   use_diff_groups = FALSE,
   linkedGauss = FALSE,
-  linked_table = 0
+  linked_table = 0,
+  collapseAware = TRUE
 )
 }
 \arguments{
@@ -159,6 +160,12 @@ Når parameteren benyttes ignoreres  \code{freqDec}-parameteren.
 \item \strong{\code{1}:} Desimaltall for første nace-kode benyttes.
 \item \strong{\code{2}:} Desimaltall for andre nace-kode benyttes.
 }}
+
+\item{collapseAware}{Parameter til \code{\link[GaussSuppression:GaussSuppressionFromData]{GaussSuppression::GaussSuppressionFromData()}}
+tilknyttet bruken av \code{linkedGauss}. Det gir liten mening med annet enn
+\code{collapseAware = TRUE} (default).
+Ellers vil ikke differanseceller være beskyttet.
+Parameteren er med slik at effekten av denne kan undersøkes.}
 }
 \value{
 data frame
