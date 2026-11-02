@@ -77,6 +77,7 @@
 #'                    benyttes parameteren direkte som input til 
 #'                    [GaussSuppression::GaussSuppressDec()]. 
 #'                    Merk at `TRUE` er det samme som  `"super-consistent"`.
+#'                    Se mer beskrivelse med eksempler på egen side: [SdcForetakPerson_extra_details]. 
 #' 
 #' @param linked_table Spesifisering tilknyttet doble nace-koder når når decimal er en data-frame.
 #'                     Når parameteren benyttes ignoreres  `freqDec`-parameteren.                       
@@ -205,6 +206,10 @@
 #' outB <- SdcForetakPerson(z100, between = prikkeVarB, within = "PERS_KJOENN", decimal = dataDec2c)
 #' sum(is.na(outA$roundedSuppressed)) + sum(is.na(outB$roundedSuppressed))  # antall prikker
 #' 
+#' 
+#' ###########################################################
+#' # Se flere eksempler på ?SdcForetakPerson_extra_details 
+#' ###########################################################
 #' 
 SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL, 
                             roundBase = 3, maxN = NULL,

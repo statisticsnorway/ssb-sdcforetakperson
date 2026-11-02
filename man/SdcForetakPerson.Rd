@@ -151,7 +151,8 @@ Parameteren har betydning når \code{decimal = TRUE} og \code{double_vars} benyt
 Ved annen input enn \code{TRUE} eller \code{FALSE} (default),
 benyttes parameteren direkte som input til
 \code{\link[GaussSuppression:GaussSuppressDec]{GaussSuppression::GaussSuppressDec()}}.
-Merk at \code{TRUE} er det samme som  \code{"super-consistent"}.}
+Merk at \code{TRUE} er det samme som  \code{"super-consistent"}.
+Se mer beskrivelse med eksempler på egen side: \link{SdcForetakPerson_extra_details}.}
 
 \item{linked_table}{Spesifisering tilknyttet doble nace-koder når når decimal er en data-frame.
 Når parameteren benyttes ignoreres  \code{freqDec}-parameteren.
@@ -288,5 +289,9 @@ outA <- SdcForetakPerson(z100, between = prikkeVarA, decimal = dataDec2c)
 outB <- SdcForetakPerson(z100, between = prikkeVarB, within = "PERS_KJOENN", decimal = dataDec2c)
 sum(is.na(outA$roundedSuppressed)) + sum(is.na(outB$roundedSuppressed))  # antall prikker
 
+
+###########################################################
+# Se flere eksempler på ?SdcForetakPerson_extra_details 
+###########################################################
 
 }
