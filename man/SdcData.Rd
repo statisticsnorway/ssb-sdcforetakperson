@@ -18,6 +18,8 @@ Function that returns a dataset
 \examples{
 SdcData("syssel7")
 z <- SdcData("syssel100")
+a10 <- SdcData("sdc_sample_10")
+a1000 <- SdcData("sdc_sample_1000")
 }
 \author{
 Øyvind Langsrud

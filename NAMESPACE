@@ -8,30 +8,40 @@ export(SdcData)
 export(SdcForetakPerson)
 export(SdcForetakPersonDecimalTest)
 export(lower_match)
-importFrom(GaussSuppression,GaussSuppressDec)
-importFrom(GaussSuppression,GaussSuppressionFromData)
-importFrom(GaussSuppression,MaxContribution)
-importFrom(GaussSuppression,Ncontributors)
-importFrom(GaussSuppression,NcontributorsHolding)
-importFrom(GaussSuppression,SuppressionFromDecimals)
-importFrom(Matrix,as.matrix)
-importFrom(Matrix,colSums)
-importFrom(Matrix,crossprod)
-importFrom(SSBtools,CheckInput)
-importFrom(SSBtools,Match)
-importFrom(SSBtools,ModelMatrix)
-importFrom(SSBtools,Number)
-importFrom(SSBtools,RbindAll)
-importFrom(SSBtools,RowGroups)
-importFrom(SSBtools,SortRows)
-importFrom(SSBtools,WildcardGlobbingVector)
+importFrom(GaussSuppression,
+  GaussSuppressDec,
+  GaussSuppressionFromData,
+  MaxContribution,
+  Ncontributors,
+  NcontributorsHolding,
+  SuppressionFromDecimals
+)
+importFrom(Matrix,
+  as.matrix,
+  colSums,
+  crossprod
+)
+importFrom(SSBtools,
+  CheckInput,
+  Match,
+  ModelMatrix,
+  Number,
+  RbindAll,
+  RowGroups,
+  SortRows,
+  WildcardGlobbingVector
+)
 importFrom(SmallCountRounding,PLSrounding)
 importFrom(methods,hasArg)
-importFrom(stats,aggregate)
-importFrom(stats,delete.response)
-importFrom(stats,formula)
-importFrom(stats,runif)
-importFrom(stats,terms)
-importFrom(utils,data)
-importFrom(utils,flush.console)
-importFrom(utils,head)
+importFrom(stats,
+  aggregate,
+  delete.response,
+  formula,
+  runif,
+  terms
+)
+importFrom(utils,
+  data,
+  flush.console,
+  head
+)
