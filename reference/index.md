@@ -1,0 +1,40 @@
+# Package index
+
+## All functions
+
+- [`KostraApply()`](https://statisticsnorway.github.io/SdcForetakPerson/reference/KostraApply.md)
+  : Apply a function with data frame output over data subsets
+
+- [`Make_FRTK_VIRK_UNIK_AggVar()`](https://statisticsnorway.github.io/SdcForetakPerson/reference/Make_FRTK_VIRK_UNIK_AggVar.md)
+  : Genererer variabel som er foretak-ID dersom den finnes, ellers
+  virksomhet-ID, eller en unik ID.
+
+- [`MissingReplaceFirst()`](https://statisticsnorway.github.io/SdcForetakPerson/reference/MissingReplaceFirst.md)
+  : First column with missing values replaced
+
+- [`Ones2agg()`](https://statisticsnorway.github.io/SdcForetakPerson/reference/Ones2agg.md)
+  : Ones to be aggregated to counts
+
+- [`PLSroundingSuppressed()`](https://statisticsnorway.github.io/SdcForetakPerson/reference/PLSroundingSuppressed.md)
+  : Rounding after suppression
+
+- [`SdcData()`](https://statisticsnorway.github.io/SdcForetakPerson/reference/SdcData.md)
+  : Function that returns a dataset
+
+- [`SdcForetakPerson()`](https://statisticsnorway.github.io/SdcForetakPerson/reference/SdcForetakPerson.md)
+  : Prikking av foretak og avrunding eller prikking av personer
+
+- [`SdcForetakPerson_extra_details`](https://statisticsnorway.github.io/SdcForetakPerson/reference/SdcForetakPerson_extra_details.md)
+  : Ekstra SdcForetakPerson-detaljer
+
+- [`lower_match()`](https://statisticsnorway.github.io/SdcForetakPerson/reference/lower_match.md)
+  :
+
+  Navn i data som er matchende etter
+  [`tolower`](https://rdrr.io/r/base/chartr.html)
+
+- [`sn2007_sn2025`](https://statisticsnorway.github.io/SdcForetakPerson/reference/sn2007_sn2025.md)
+  : sn2007_sn2025 data
+
+- [`syssel100`](https://statisticsnorway.github.io/SdcForetakPerson/reference/syssel100.md)
+  : syssel100 data
