@@ -44,7 +44,9 @@ SdcForetakPerson(
   use_diff_groups = FALSE,
   linkedGauss = FALSE,
   linked_table = 0,
-  collapseAware = TRUE
+  collapseAware = TRUE,
+  decimal_1 = NULL,
+  decimal_2 = NULL
 )
 }
 \arguments{

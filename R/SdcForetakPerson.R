@@ -243,7 +243,9 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                             use_diff_groups = FALSE,
                             linkedGauss = FALSE,
                             linked_table = 0,
-                            collapseAware = TRUE){
+                            collapseAware = TRUE,
+                            decimal_1 = NULL,
+                            decimal_2 = NULL){
   
   argOutput <- get0("GaussSuppressionFromData_argOutput", ifnotfound = "publish") # special input for testing from global environment
   
@@ -322,6 +324,24 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     }
     formula_decimal <- between
     if (!is.null(double_vars)) {
+      if (!is.null(decimal_1)) {
+        input_decimal <- decimal_1
+        input_d <- 1
+      } else if (!is.null(decimal_2)) {
+        input_decimal <- decimal_2
+        input_d <- 2
+      } else {
+        input_d <- 0
+      }
+      if (input_d) {
+        input_d_double_vars <- double_vars
+        for (i in seq_along(double_vars)) {
+          input_d_double_vars[[i]] <- input_d_double_vars[[i]][input_d]
+        }  
+        input_d_formula <- SSBtools::substitute_formula_vars(formula_decimal, input_d_double_vars)
+      }
+      
+      
       if (double_priority %in% c(-1, -2)) {
         for (i in seq_along(double_vars)) {
           double_vars[[i]] <- double_vars[[i]][-double_priority]
@@ -473,23 +493,56 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
                                           linkedGauss = linkedGauss, collapseAware = collapseAware)
             return(prikkData)
           }
-          a <-         GaussSuppressDec(data, dimVar = dimVar_decimal, freqVar = freqVar, 
-                                        formula = formula_decimal,
-                                                charVar = c(sector, "FRTK_VIRK_UNIK"), 
-                                                weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
-                                                secondaryZeros = secondaryZeros,
-                                                primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
-                                                singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
-                                                sector = sector, private = private, #output = "publish_inner",
-                                        output = ifelse(is.null(formula_decimal), "publish_inner", "inner"),
-                                                nRep = nRep, digits = digitsA,  mismatchWarning = digitsB, 
-                                        iWait = iWait,
-                                        k1 = k1, k2 = k2, pPercent =  pPercent, 
-                                        use_freqVar = use_freqVar, 
-                                        candidates = candidates_ignore_vars,
-                                        ignore_vars = ignore_vars,
-                                        avoidHierarchical = TRUE, hierarchical_extend0 = TRUE,
-                                        linkedGauss = linkedGauss, collapseAware = collapseAware, linked_rep = TRUE)
+          
+          
+          if (input_d) {
+            
+            suppressed_from_input_d <- SuppressionFromDecimals(input_decimal,
+                                               freqVar = freqVar,
+                                               formula = input_d_formula,
+                                               avoidHierarchical = TRUE, hierarchical_extend0 = TRUE,
+                                               decVar = WildcardGlobbingVector(names(input_decimal), freqDec),
+                                               preAggregate = preAggregate, digits = digitsB)
+            
+             a <-         special_additional_suppression_special(data,
+                                          suppressedData = suppressed_from_input_d,
+                                          dimVar = dimVar_decimal, freqVar = freqVar, 
+                                          formula = formula_decimal,
+                                          charVar = c(sector, "FRTK_VIRK_UNIK"), 
+                                          weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
+                                          secondaryZeros = secondaryZeros,
+                                          primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
+                                          singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
+                                          sector = sector, private = private, #output = "publish_inner",
+                                          output = ifelse(is.null(formula_decimal), "publish_inner", "inner"),
+                                          nRep = nRep, digits = digitsA,  mismatchWarning = digitsB, 
+                                          iWait = iWait,
+                                          k1 = k1, k2 = k2, pPercent =  pPercent, 
+                                          use_freqVar = use_freqVar, 
+                                          candidates = candidates_ignore_vars,
+                                          ignore_vars = ignore_vars,
+                                          avoidHierarchical = TRUE, hierarchical_extend0 = TRUE,
+                                          linkedGauss = linkedGauss, collapseAware = collapseAware, linked_rep = TRUE)
+           
+          } else {
+            a <-         GaussSuppressDec(data, dimVar = dimVar_decimal, freqVar = freqVar, 
+                                          formula = formula_decimal,
+                                          charVar = c(sector, "FRTK_VIRK_UNIK"), 
+                                          weightVar = "narWeight", protectZeros = protectZeros, maxN = -1, 
+                                          secondaryZeros = secondaryZeros,
+                                          primary = Primary_FRTK_VIRK_UNIK_sektor_here, 
+                                          singleton = NULL, singletonMethod = "none", preAggregate = preAggregate,
+                                          sector = sector, private = private, #output = "publish_inner",
+                                          output = ifelse(is.null(formula_decimal), "publish_inner", "inner"),
+                                          nRep = nRep, digits = digitsA,  mismatchWarning = digitsB, 
+                                          iWait = iWait,
+                                          k1 = k1, k2 = k2, pPercent =  pPercent, 
+                                          use_freqVar = use_freqVar, 
+                                          candidates = candidates_ignore_vars,
+                                          ignore_vars = ignore_vars,
+                                          avoidHierarchical = TRUE, hierarchical_extend0 = TRUE,
+                                          linkedGauss = linkedGauss, collapseAware = collapseAware, linked_rep = TRUE)
+          }
           
           if(!is.null(formula_decimal)){
             # names(a)[names(a) == freqVar] <- "freq"
