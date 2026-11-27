@@ -169,6 +169,14 @@ tilknyttet bruken av \code{linkedGauss}. Det gir liten mening med annet enn
 \code{collapseAware = TRUE} (default).
 Ellers vil ikke differanseceller være beskyttet.
 Parameteren er med slik at effekten av denne kan undersøkes.}
+
+\item{decimal_1}{Tidligere desimaltall-output relatert til den første nace-koden, i hendhold til spesifiseringen av \code{double_vars}.
+Ny output vil bestå av nye desimaltall for begge-nacekodene, men det er tatt hensyn til \code{decimal_1} på en slik måte
+at prikkingen forblir uendret.
+Når \code{decimal_1} er input skal det være unødvendig å spesifisere \code{double_priority}.
+Se eksempler på \link{SdcForetakPerson_extra_details}}
+
+\item{decimal_2}{Tidligere desimaltall-output relatert til den andre nace-koden.}
 }
 \value{
 data frame

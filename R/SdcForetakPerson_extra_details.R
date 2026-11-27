@@ -39,7 +39,7 @@
 #'   between = ~(arb_fylke + ARB_ARBKOMM) * nar2_begge * sektor + (arb_fylke + ARB_ARBKOMM) * nar3_begge, 
 #'   decimal = TRUE, 
 #'   double_vars = list(nar2_begge = c("SN2007_2", "SN2025_2"), 
-#'   nar3_begge = c("SN2007_3", "SN2025_3")), 
+#'                      nar3_begge = c("SN2007_3", "SN2025_3")), 
 #'   use_diff_groups = TRUE, 
 #'   double_priority = 1, 
 #'   nace = "SN2007_2")
@@ -56,7 +56,7 @@
 #'   between = ~(arb_fylke + ARB_ARBKOMM) * nar2_begge * sektor + (arb_fylke + ARB_ARBKOMM) * nar3_begge, 
 #'   decimal = TRUE, 
 #'   double_vars = list(nar2_begge = c("SN2007_2", "SN2025_2"), 
-#'   nar3_begge = c("SN2007_3", "SN2025_3")), 
+#'                      nar3_begge = c("SN2007_3", "SN2025_3")), 
 #'   use_diff_groups = TRUE, 
 #'   double_priority = 1, 
 #'   nace = "SN2007_2", 
@@ -78,6 +78,46 @@
 #' # ved linkedGauss = TRUE
 #' sum(is.na(outA_1_$roundedSuppressed)) + sum(is.na(outB_1_$roundedSuppressed))
 #' sum(is.na(outA_2_$roundedSuppressed)) + sum(is.na(outB_2_$roundedSuppressed))
+#' 
+#' 
+#' 
+#' ####  Bruk av decimal_1 ####
+#' 
+#' decimal_1 <- SdcForetakPerson(a, 
+#'   between = ~(arb_fylke + ARB_ARBKOMM) * SN2007_2 * sektor + (arb_fylke + ARB_ARBKOMM) * SN2007_3, 
+#'   decimal = TRUE, 
+#'   use_diff_groups = TRUE, 
+#'   double_priority = 1, 
+#'   nace = "SN2007_2") 
+#'   
+#' decimal_12 <- SdcForetakPerson(a, 
+#'   between = ~(arb_fylke + ARB_ARBKOMM) * nar2_begge * sektor + (arb_fylke + ARB_ARBKOMM) * nar3_begge, 
+#'   decimal = TRUE, 
+#'   double_vars = list(nar2_begge = c("SN2007_2", "SN2025_2"), 
+#'                      nar3_begge = c("SN2007_3", "SN2025_3")), 
+#'   use_diff_groups = TRUE, 
+#'   nace = "SN2007_2",
+#'   decimal_1 = decimal_1)   
+#'   
+#' 
+#' # Resultatet ble likt som double_priority = 1 
+#' # Det var decimal_1 i input som medførte dette 
+#' all.equal(decimal_12, decimal )
+#'  
+#'  
+#' decimal_12_ <- SdcForetakPerson(a, 
+#'   between = ~(arb_fylke + ARB_ARBKOMM) * nar2_begge * sektor + (arb_fylke + ARB_ARBKOMM) * nar3_begge, 
+#'   decimal = TRUE, 
+#'   double_vars = list(nar2_begge = c("SN2007_2", "SN2025_2"), 
+#'                      nar3_begge = c("SN2007_3", "SN2025_3")), 
+#'   use_diff_groups = TRUE, 
+#'   nace = "SN2007_2",
+#'   decimal_1 = decimal_1,
+#'   linkedGauss = TRUE)  
+#'   
+#' # Likt av samme grunn som tidligere    
+#' all.equal(decimal_12_, decimal_ )     
+#'  
 #'
 #' @name SdcForetakPerson_extra_details
 NULL

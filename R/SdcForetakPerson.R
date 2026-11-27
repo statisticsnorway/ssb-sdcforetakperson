@@ -90,6 +90,12 @@
 #'        `collapseAware = TRUE` (default). 
 #'        Ellers vil ikke differanseceller være beskyttet.  
 #'        Parameteren er med slik at effekten av denne kan undersøkes. 
+#' @param decimal_1 Tidligere desimaltall-output relatert til den første nace-koden, i hendhold til spesifiseringen av `double_vars`.
+#'        Ny output vil bestå av nye desimaltall for begge-nacekodene, men det er tatt hensyn til `decimal_1` på en slik måte 
+#'        at prikkingen forblir uendret.  
+#'        Når `decimal_1` er input skal det være unødvendig å spesifisere `double_priority`.
+#'         Se eksempler på [SdcForetakPerson_extra_details]
+#' @param decimal_2 Tidligere desimaltall-output relatert til den andre nace-koden. 
 #' 
 #' @return data frame 
 #' @export
@@ -258,6 +264,17 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
     decimal_warning <- FALSE
   }
   
+  if(is.null(double_vars)) {
+    if(!is.null(decimal_1) | !is.null(decimal_2)) {
+      warning("decimal_1 og decimal_2 ignoreres når double_vars ikke er spesifisert")
+    } 
+  } else {
+    if(!is.null(decimal_1) & !is.null(decimal_2)) {
+      stop("Både decimal_1 og decimal_2 kan ikke spesifiseres samtidig")
+    }
+  }
+  
+  input_d <- 0
   
   if (is.null(output)) 
     output = "rounded"
@@ -330,9 +347,7 @@ SdcForetakPerson = function(data, between  = NULL, within = NULL, by = NULL,
       } else if (!is.null(decimal_2)) {
         input_decimal <- decimal_2
         input_d <- 2
-      } else {
-        input_d <- 0
-      }
+      } 
       if (input_d) {
         input_d_double_vars <- double_vars
         for (i in seq_along(double_vars)) {
