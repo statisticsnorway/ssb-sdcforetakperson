@@ -91,8 +91,6 @@ sum(is.na(outA_2_$roundedSuppressed)) + sum(is.na(outB_2_$roundedSuppressed))
 decimal_1 <- SdcForetakPerson(a, 
   between = ~(arb_fylke + ARB_ARBKOMM) * SN2007_2 * sektor + (arb_fylke + ARB_ARBKOMM) * SN2007_3, 
   decimal = TRUE, 
-  use_diff_groups = TRUE, 
-  double_priority = 1, 
   nace = "SN2007_2") 
   
 decimal_12 <- SdcForetakPerson(a, 
